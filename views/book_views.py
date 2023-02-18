@@ -23,6 +23,8 @@ class BooksViews(Resource):
     @admin_required
     def post(self):
         data = request.json
+        if not data:
+            abort(400)
         books_service.create(data)
         return '', 201
 
@@ -37,6 +39,8 @@ class BookViews(Resource):
     @admin_required
     def put(self, id_):
         data = request.json
+        if not data:
+            abort(400)
         data['id'] = id_
         books_service.update(data)
         return '', 204
@@ -44,6 +48,8 @@ class BookViews(Resource):
     @admin_required
     def patch(self, id_):
         data = request.json
+        if not data:
+            abort(400)
         data['id'] = id_
         books_service.update_partial(data)
         return '', 204
@@ -59,7 +65,8 @@ class BookGiveViews(Resource):
     @admin_required
     def post(self):
         data = request.json
-
+        if not data:
+            abort(400)
         if ['reader_id', 'book_id'] == data.keys():
             abort(400)
         books_service.give_book_to_reader(data)
@@ -71,6 +78,8 @@ class BookGetViews(Resource):
     @admin_required
     def post(self):
         data = request.json
+        if not data:
+            abort(400)
         if 'book_id' == data.keys():
             abort(400)
         books_service.get_book_from_reader(data)

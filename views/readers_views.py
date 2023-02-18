@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource
-from flask import request
+from flask import request, abort
 
 from container import reader_service
 from dao.models_dao import ReaderSchema
@@ -28,6 +28,8 @@ class ReaderViews(Resource):
     @user_required
     def put(self, u_id):
         data = request.json
+        if not data:
+            abort(400)
         data['id'] = u_id
         reader_service.update(data)
         return '', 204
@@ -35,6 +37,8 @@ class ReaderViews(Resource):
     @user_required
     def patch(self, u_id):
         data = request.json
+        if not data:
+            abort(400)
         data['id'] = u_id
         reader_service.update_partial(data)
         return '', 204

@@ -1,5 +1,5 @@
 from flask_restx import Resource, Namespace
-from flask import request
+from flask import request, abort
 
 from container import author_service
 from dao.models_dao import AuthorSchema
@@ -20,6 +20,8 @@ class AuthorsViews(Resource):
     @admin_required
     def post(self):
         data = request.json
+        if not data:
+            abort(400)
         author_service.create(data)
         return '', 201
 
@@ -34,6 +36,8 @@ class AuthorViews(Resource):
     @admin_required
     def put(self, id_):
         data = request.json
+        if not data:
+            abort(400)
         data['id'] = id_
         author_service.update(data)
         return '', 204
@@ -41,6 +45,8 @@ class AuthorViews(Resource):
     @admin_required
     def patch(self, id_):
         data = request.json
+        if not data:
+            abort(400)
         data['id'] = id_
         author_service.update_partial(data)
         return '', 204

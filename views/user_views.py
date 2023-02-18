@@ -1,5 +1,5 @@
 from flask_restx import Resource, Namespace
-from flask import request
+from flask import request, abort
 
 from container import user_service
 from dao.models_dao import UserSchema
@@ -19,6 +19,8 @@ class UsersViews(Resource):
 
     def post(self):
         user_data = request.json
+        if not user_data:
+            abort(400)
         user_service.create(user_data)
         return '', 201
 
@@ -33,6 +35,8 @@ class UserViews(Resource):
     @user_required
     def put(self, u_id):
         user_data = request.json
+        if not user_data:
+            abort(400)
         user_data['id'] = u_id
         user_service.update(user_data)
         return '', 204
@@ -40,6 +44,8 @@ class UserViews(Resource):
     @user_required
     def patch(self, u_id):
         user_data = request.json
+        if not user_data:
+            abort(400)
         user_data['id'] = u_id
         user_service.update_partial(user_data)
         return '', 204

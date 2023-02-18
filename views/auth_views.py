@@ -9,6 +9,8 @@ auth_ns = Namespace('auth')
 class AuthsViews(Resource):
     def post(self):
         data = request.json
+        if not data:
+            abort(400)
         username = data.get('username')
         password = data.get('password')
 
@@ -21,6 +23,8 @@ class AuthsViews(Resource):
 
     def put(self):
         data = request.json
+        if not data:
+            abort(400)
         refresh_token = data.get('refresh_token')
 
         if not refresh_token:

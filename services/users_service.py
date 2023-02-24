@@ -1,9 +1,10 @@
 import base64
 import hashlib
 import hmac
-from flask import abort
+from flask import abort, request
+import jwt
 
-from constants import JWT_ALGO, PWD_HASH_SALT, PWD_HASH_ITERATIONS
+from constants import JWT_ALGO, PWD_HASH_SALT, PWD_HASH_ITERATIONS, JWT_SECRET
 from dao.models.models_dao import User
 from dao.users_dao import UserDAO
 from services.readers_service import ReaderService
@@ -79,3 +80,9 @@ class UserService:
             PWD_HASH_ITERATIONS
         )
         return hmac.compare_digest(decode_right_password, hash_other_password)
+
+    def get_user_from_token(self) -> User:
+        data = request.headers['Authorization']
+        token = data.split('Bearer ')[-1]
+        user_data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])
+        return self.get_by_username(user_data['username'])

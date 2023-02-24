@@ -67,3 +67,38 @@ class UserSchema(Schema):
     username = fields.Str()
     password = fields.Str()
     role = fields.Str()
+
+
+class News(db.Model):
+    __tablename__ = 'news'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = relationship('User')
+    text = db.Column(db.String)
+    data = db.Column(db.DateTime)
+
+
+class NewsSchema(Schema):
+    id = fields.Int(dump_only=True)
+    user_id = fields.Int()
+    text = fields.Str()
+    data = fields.DateTime()
+
+
+class Comment(db.Model):
+    __tablename__ = 'comment'
+    id = db.Column(db.Integer, primary_key=True)
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'))
+    news = relationship('News')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user = relationship('User')
+    text = db.Column(db.String)
+    data = db.Column(db.DateTime)
+
+
+class CommentSchema(Schema):
+    id = fields.Int(dump_only=True)
+    news_id = fields.Int()
+    user_id = fields.Int()
+    text = fields.Str()
+    data = fields.DateTime()

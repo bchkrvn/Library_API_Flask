@@ -20,11 +20,15 @@ class UserService:
     def get_one(self, id_):
         user = self.dao.get_one(id_)
         if not user:
-            abort(404)
+            abort(404, f'User with id={id_} not found')
         return user
 
     def get_by_username(self, username):
-        return self.dao.get_by_name(username)
+        user = self.dao.get_by_name(username)
+        if not user:
+            abort(404, f'User "{username}" not found')
+        return user
+
 
     def create(self, data):
         if 'role' not in data:
@@ -36,8 +40,6 @@ class UserService:
 
     def update(self, data):
         user = self.get_one(data['id'])
-        if not user:
-            abort(404)
 
         user.username = data.get('username')
         user.password = self.get_hash(data['password'])
@@ -46,8 +48,6 @@ class UserService:
 
     def update_partial(self, data):
         user = self.get_one(data['id'])
-        if not user:
-            abort(404)
 
         if 'username' in data:
             user.username = data.get('username')

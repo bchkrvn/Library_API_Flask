@@ -13,7 +13,7 @@ class ReaderService:
     def get_one(self, id_):
         reader = self.dao.get_one(id_)
         if not reader:
-            abort(404)
+            abort(404, f'reader with id={id_} not found')
         return reader
 
     def create(self, user):

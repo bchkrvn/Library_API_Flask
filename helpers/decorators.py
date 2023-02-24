@@ -53,8 +53,7 @@ def user_required(func):
             user = user_service.get_by_username(user_data['username'])
         except Exception as e:
             abort(400)
-        print(id_ != user.id)
-        print(user.role != 'admin')
+
         if id_ == user.id or user.role == 'admin':
             return func(*args, **kwargs)
         else:

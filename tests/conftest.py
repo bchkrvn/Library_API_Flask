@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 import pytest as pytest
 
 from dao.authors_dao import AuthorDAO
-from dao.models_dao import Author
+from dao.models.models_dao import Author
 
 
 @pytest.fixture

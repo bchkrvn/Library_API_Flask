@@ -2,7 +2,7 @@ from flask_restx import Resource, Namespace
 from flask import request, abort
 
 from container import user_service
-from dao.models_dao import UserSchema
+from dao.models.models_dao import UserSchema
 from helpers.decorators import admin_required, user_required
 
 user_ns = Namespace('users')

@@ -1,6 +1,6 @@
 import pytest
 
-from dao.models_dao import Author
+from dao.models.models_dao import Author
 from services.authors_service import AuthorService
 
 

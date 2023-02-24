@@ -1,4 +1,4 @@
-from dao.models_dao import Reader
+from dao.models.models_dao import Reader
 
 
 class ReaderDAO:

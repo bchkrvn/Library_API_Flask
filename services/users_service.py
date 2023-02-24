@@ -4,7 +4,7 @@ import hmac
 from flask import abort
 
 from constants import JWT_ALGO, PWD_HASH_SALT, PWD_HASH_ITERATIONS
-from dao.models_dao import User
+from dao.models.models_dao import User
 from dao.users_dao import UserDAO
 from services.readers_service import ReaderService
 

@@ -2,7 +2,7 @@ from flask_restx import Namespace, Resource
 from flask import request, abort
 
 from container import reader_service
-from dao.models_dao import ReaderSchema
+from dao.models.models_dao import ReaderSchema
 from helpers.decorators import admin_required, user_required
 
 reader_ns = Namespace('readers')

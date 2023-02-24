@@ -2,7 +2,7 @@ from flask_restx import Resource, Namespace
 from flask import request, abort
 
 from container import books_service
-from dao.models_dao import BookSchema
+from dao.models.models_dao import BookSchema
 from helpers.decorators import admin_required, auth_required
 
 book_ns = Namespace('books')

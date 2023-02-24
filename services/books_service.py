@@ -1,7 +1,7 @@
 from dao.books_dao import BookDAO
 from flask import abort
 
-from dao.models_dao import Book
+from dao.models.models_dao import Book
 
 
 class BookService:

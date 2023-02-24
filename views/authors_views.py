@@ -2,7 +2,7 @@ from flask_restx import Resource, Namespace
 from flask import request, abort
 
 from container import author_service
-from dao.models_dao import AuthorSchema
+from dao.models.models_dao import AuthorSchema
 from helpers.decorators import admin_required, auth_required
 
 author_ns = Namespace('authors')

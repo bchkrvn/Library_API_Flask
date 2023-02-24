@@ -13,7 +13,7 @@ class AuthorService:
     def get_one(self, id_):
         book = self.dao.get_one(id_)
         if not book:
-            abort(404)
+            abort(404, f'author with id={id_} not found')
         return book
 
     def create(self, data):

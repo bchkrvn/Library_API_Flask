@@ -5,7 +5,7 @@ from container import books_service
 from dao.models_dao import BookSchema
 from helpers.decorators import admin_required, auth_required
 
-book_ns = Namespace('/books')
+book_ns = Namespace('books')
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
 

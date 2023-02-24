@@ -16,7 +16,7 @@ class BookService:
     def get_one(self, id_):
         book = self.dao.get_one(id_)
         if not book:
-            abort(404)
+            abort(404,  f'book with id={id_} not found')
         return book
 
     def filter_books(self, author_id, reader_id, section):
@@ -40,7 +40,7 @@ class BookService:
     def create(self, data):
         author_id = data.get('author_id')
         author = self.author_service.get_one(author_id)
-        data['reader_id'] = None
+        data['is_in_lib'] = True
         new_book = Book(**data)
         self.dao.save(new_book)
 
@@ -79,7 +79,7 @@ class BookService:
             book.reader = reader
             self.dao.save(book)
         else:
-            abort(404)
+            abort(400, f'book id={book_id} not in library')
 
     def get_book_from_reader(self, data):
         book_id = data.get('book_id')
@@ -90,4 +90,4 @@ class BookService:
             book.reader_id = None
             self.dao.save(book)
         else:
-            abort(400)
+            abort(400, f'book id={book_id} already in library')

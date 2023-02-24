@@ -13,14 +13,12 @@ class AuthService:
 
     def generate_token(self, username, password, is_refresh=True):
         user = self.user_service.get_by_username(username)
-        if not user:
-            abort(400)
 
         if not is_refresh:
             is_right_password = self.user_service.compare_password(user.password, password)
             print(2)
             if not is_right_password:
-                abort(400)
+                abort(400, 'wrong password')
         data = {
             'username': user.username,
             'role': user.role,
@@ -45,7 +43,7 @@ class AuthService:
             data = jwt.decode(refresh_token, JWT_SECRET, algorithms=[JWT_ALGO])
             username = data.get('username')
         except Exception as e:
-            abort(400)
+            abort(400, 'wrong token')
 
         return self.generate_token(username, None, is_refresh=True)
 

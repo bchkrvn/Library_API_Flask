@@ -5,7 +5,7 @@ from container import author_service
 from dao.models_dao import AuthorSchema
 from helpers.decorators import admin_required, auth_required
 
-author_ns = Namespace('/authors')
+author_ns = Namespace('authors')
 author_schema = AuthorSchema()
 authors_schema = AuthorSchema(many=True)
 

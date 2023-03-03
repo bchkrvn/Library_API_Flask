@@ -3,7 +3,7 @@ from flask import request, abort
 
 from container import news_service, comment_service
 from dao.models.models_dao import NewsSchema, CommentSchema
-from helpers.decorators import auth_required
+from helpers.decorators import auth_required, user_required
 
 news_ns = Namespace('news')
 news_schema = NewsSchema()
@@ -19,13 +19,13 @@ class NewsViews(Resource):
         news = news_service.get_all()
         return newss_schema.dump(news), 200
 
-    @auth_required
-    def post(self):
+    @user_required
+    def post(self, u_id):
         data = request.json
         if not data:
             abort(400)
 
-        news_service.create(data)
+        news_service.create(data, u_id)
 
         return '', 201
 
@@ -42,8 +42,8 @@ class NewssViews(Resource):
 
         return news_dict, 200
 
-    @auth_required
-    def post(self, n_id):
+    @user_required
+    def post(self, n_id, u_id):
         data = request.json
         if not data:
             abort(400)
@@ -53,8 +53,8 @@ class NewssViews(Resource):
 
         return '', 201
 
-    @auth_required
-    def put(self, n_id):
+    @user_required
+    def put(self, n_id, u_id):
         data = request.json
         if not data:
             abort(400)
@@ -64,7 +64,7 @@ class NewssViews(Resource):
 
         return '', 204
 
-    @auth_required
-    def delete(self, n_id):
+    @user_required
+    def delete(self, n_id, u_id):
         news_service.delete(n_id)
         return '', 204

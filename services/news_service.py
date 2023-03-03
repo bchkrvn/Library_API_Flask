@@ -22,24 +22,24 @@ class NewsService:
 
         return news
 
-    def create(self, data):
-        data['user_id'] = self.user_service.get_user_from_token().id
+    def create(self, data, u_id):
+        data['user_id'] = u_id
         data['data'] = datetime.datetime.now()
         new_news = News(**data)
         self.news_dao.save(new_news)
 
-    def update(self, data):
+    def update(self, data, u_id):
         news = self.get_one(data['id'])
-        user = self.user_service.get_user_from_token()
+        user = self.user_service.get_one(u_id)
         if news.user_id != user.id and user.role != 'admin':
             abort(403)
         news.text = data.get('text')
         news.data = datetime.datetime.now()
         self.news_dao.save(news)
 
-    def delete(self, id_):
-        news = self.get_one(id_)
-        user = self.user_service.get_user_from_token()
+    def delete(self, n_id, u_id):
+        news = self.get_one(n_id)
+        user = self.user_service.get_one(u_id)
         if news.user_id != user.id and user.role != 'admin':
             abort(403)
         self.news_dao.delete(news)

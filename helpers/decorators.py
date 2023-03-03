@@ -1,4 +1,4 @@
-from flask import request, abort
+from flask import request, abort, current_app
 import jwt
 
 from constants import JWT_SECRET, JWT_ALGO
@@ -13,7 +13,7 @@ def auth_required(func):
         token = data.split('Bearer ')[-1]
 
         try:
-            jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])
+            jwt.decode(token, current_app.config["JWT_SECRET"], algorithms=[current_app.config["JWT_ALGO"]])
         except Exception as e:
             abort(400)
 
@@ -30,7 +30,7 @@ def admin_required(func):
         token = data.split('Bearer ')[-1]
 
         try:
-            user = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])
+            user = jwt.decode(token, current_app.config["JWT_SECRET"], algorithms=[current_app.config["JWT_ALGO"]])
             role = user.get('role', 'user')
         except Exception as e:
             abort(400)
@@ -47,18 +47,12 @@ def user_required(func):
     def wrapper(*args, **kwargs):
         data = request.headers['Authorization']
         token = data.split('Bearer ')[-1]
-        id_ = kwargs['u_id']
         try:
             user_data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])
             user = user_service.get_by_username(user_data['username'])
         except Exception as e:
             abort(400)
 
-        if id_ == user.id or user.role == 'admin':
-            return func(*args, **kwargs)
-        else:
-            abort(403)
-
-
+        return func(*args, **kwargs, u_id=user.id)
 
     return wrapper

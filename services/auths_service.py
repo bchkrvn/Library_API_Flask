@@ -1,9 +1,8 @@
 import calendar
 import datetime
 
-from constants import JWT_SECRET, JWT_ALGO
 from services.users_service import UserService
-from flask import abort
+from flask import abort, current_app
 import jwt
 
 
@@ -25,11 +24,11 @@ class AuthService:
         }
         min10 = datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
         data['exp'] = calendar.timegm(min10.timetuple())
-        access_token = jwt.encode(data, JWT_SECRET, algorithm=JWT_ALGO)
+        access_token = jwt.encode(data, current_app.config["JWT_SECRET"], algorithm=current_app.config["JWT_ALGO"])
 
         days130 = datetime.datetime.utcnow() + datetime.timedelta(days=130)
         data['exp'] = calendar.timegm(days130.timetuple())
-        refresh_token = jwt.encode(data, JWT_SECRET, algorithm=JWT_ALGO)
+        refresh_token = jwt.encode(data, current_app.config["JWT_SECRET"], algorithm=current_app.config["JWT_ALGO"])
 
         tokens = {
             'access_token': access_token,
@@ -40,10 +39,10 @@ class AuthService:
 
     def approve_refresh_token(self, refresh_token):
         try:
-            data = jwt.decode(refresh_token, JWT_SECRET, algorithms=[JWT_ALGO])
+            data = jwt.decode(refresh_token, current_app.config["JWT_SECRET"],
+                              algorithms=[current_app.config["JWT_ALGO"]])
             username = data.get('username')
         except Exception as e:
             abort(400, 'wrong token')
 
         return self.generate_token(username, None, is_refresh=True)
-

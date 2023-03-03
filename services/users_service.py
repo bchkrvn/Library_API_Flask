@@ -1,10 +1,7 @@
 import base64
 import hashlib
 import hmac
-from flask import abort, request
-import jwt
-
-from constants import JWT_ALGO, PWD_HASH_SALT, PWD_HASH_ITERATIONS, JWT_SECRET
+from flask import abort, current_app
 from dao.models.models_dao import User
 from dao.users_dao import UserDAO
 from services.readers_service import ReaderService
@@ -29,7 +26,6 @@ class UserService:
         if not user:
             abort(404, f'User "{username}" not found')
         return user
-
 
     def create(self, data):
         if 'role' not in data:
@@ -64,25 +60,25 @@ class UserService:
 
     def get_hash(self, password):
         hash_password = hashlib.pbkdf2_hmac(
-            'sha256',
+            current_app.config["HASH_NAME"],
             password.encode('utf-8'),
-            PWD_HASH_SALT,
-            PWD_HASH_ITERATIONS
+            current_app.config["PWD_HASH_SALT"],
+            current_app.config["PWD_HASH_ITERATIONS"]
         )
         return base64.b64encode(hash_password)
 
     def compare_password(self, right_password, other_password) -> bool:
         decode_right_password = base64.b64decode(right_password)
         hash_other_password = hashlib.pbkdf2_hmac(
-            JWT_ALGO,
+            current_app.config["HASH_NAME"],
             other_password.encode('utf-8'),
-            PWD_HASH_SALT,
-            PWD_HASH_ITERATIONS
+            current_app.config["PWD_HASH_SALT"],
+            current_app.config["PWD_HASH_ITERATIONS"]
         )
         return hmac.compare_digest(decode_right_password, hash_other_password)
 
-    def get_user_from_token(self) -> User:
-        data = request.headers['Authorization']
-        token = data.split('Bearer ')[-1]
-        user_data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])
-        return self.get_by_username(user_data['username'])
+    # def get_user_from_token(self) -> User:
+    #     data = request.headers['Authorization']
+    #     token = data.split('Bearer ')[-1]
+    #     user_data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])
+    #     return self.get_by_username(user_data['username'])

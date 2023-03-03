@@ -16,25 +16,25 @@ class CommentService:
     def get_by_news_id(self, n_id):
         return self.comment_dao.get_by_news_id(n_id)
 
-    def create(self, data):
+    def create(self, data, u_id):
         news = self.news_service.get_one(data['news_id'])
-        data['user_id'] = self.user_service.get_user_from_token().id
+        data['user_id'] = u_id
         data['data'] = datetime.datetime.now()
         new_comment = Comment(**data)
         self.comment_dao.save(new_comment)
 
-    def update(self, data):
+    def update(self, data, u_id):
         comment = self.comment_dao.get_one(data['id'])
-        user = self.user_service.get_user_from_token()
+        user = self.user_service.get_one(u_id)
         if comment.user_id != user.id and user.role != 'admin':
             abort(403)
         comment.text = data.get('text')
         comment.data = datetime.datetime.now()
         self.comment_dao.save(comment)
 
-    def delete(self, id_):
-        comment = self.comment_dao.get_one(id_)
-        user = self.user_service.get_user_from_token()
+    def delete(self, n_id, u_id):
+        comment = self.comment_dao.get_one(n_id)
+        user = self.user_service.get_one(u_id)
         if comment.user_id != user.id and user.role != 'admin':
             abort(403)
         self.comment_dao.delete(comment)

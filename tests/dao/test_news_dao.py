@@ -21,13 +21,14 @@ class TestNewsDAO:
         assert news.id == news_1.id, "id новости не совпадает"
         assert news.user_id == news_1.user_id, "user_id новости не совпадает"
         assert news.text == news_1.text, "text новости не совпадает"
-        assert news.data == news_1.data, "data новости не совпадает"
+        assert news.date == news_1.date, "data новости не совпадает"
+        assert news.update_date == news_1.update_date, "data обновления новости не совпадает"
 
     def test_save(self, news_dao):
         news_1 = News(
             user_id=1,
             text='Текст_1',
-            data=datetime.now()
+            date=datetime.now()
         )
         news_dao.save(news_1)
         news = news_dao.get_one(news_1.id)
@@ -37,7 +38,8 @@ class TestNewsDAO:
         assert news.id == news_1.id, "id новости не совпадает"
         assert news.user_id == news_1.user_id, "user_id новости не совпадает"
         assert news.text == news_1.text, "text новости не совпадает"
-        assert news.data == news_1.data, "data новости не совпадает"
+        assert news.date == news_1.date, "data новости не совпадает"
+        assert news.update_date == news_1.update_date, "data новости не совпадает"
 
     def test_delete(self, news_1, news_dao):
         news_dao.delete(news_1)

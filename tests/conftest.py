@@ -11,6 +11,13 @@ from dao.models.models_dao import Author, Book, Reader, User, News, Comment
 from dao.news_dao import NewsDAO
 from dao.readers_dao import ReaderDAO
 from dao.users_dao import UserDAO
+from services.authors_service import AuthorService
+from services.auths_service import AuthService
+from services.books_service import BookService
+from services.comment_service import CommentService
+from services.news_service import NewsService
+from services.readers_service import ReaderService
+from services.users_service import UserService
 from setup_db import db as database
 from tools.security import get_hash
 
@@ -73,6 +80,44 @@ def comment_dao(db):
     return CommentDAO(db.session)
 
 
+"""Тестовые сервисы"""
+
+
+@pytest.fixture
+def author_service(author_dao):
+    return AuthorService(author_dao)
+
+
+@pytest.fixture
+def reader_service(reader_dao):
+    return ReaderService(reader_dao)
+
+
+@pytest.fixture
+def book_service(book_dao, author_service, reader_service):
+    return BookService(book_dao, author_service, reader_service)
+
+
+@pytest.fixture
+def user_service(user_dao, reader_service):
+    return UserService(user_dao, reader_service)
+
+
+@pytest.fixture
+def auth_service(user_service):
+    return AuthService(user_service)
+
+
+@pytest.fixture
+def news_service(news_dao, user_service):
+    return NewsService(news_dao, user_service)
+
+
+@pytest.fixture
+def comment_service(comment_dao, news_service, user_service):
+    return CommentService(comment_dao, news_service, user_service)
+
+
 """Тестовые объекты"""
 
 
@@ -106,7 +151,7 @@ def book_1(db):
         title='Название_1',
         is_in_lib=True,
         author_id=1,
-        reader_id=1,
+        reader_id=None,
     )
     db.session.add(b)
     db.session.commit()
@@ -180,9 +225,9 @@ def user_2(db):
 def admin(db):
     password = get_hash('1111')
     a = User(
-        username='name_1',
+        username='admin',
         password=password,
-        role='admin'
+        role='admin',
     )
     db.session.add(a)
     db.session.commit()
@@ -194,7 +239,8 @@ def news_1(db):
     n = News(
         user_id=1,
         text='Текст_1',
-        data=datetime.now()
+        date=datetime.now(),
+        update_date=None,
     )
     db.session.add(n)
     db.session.commit()
@@ -206,7 +252,8 @@ def news_2(db):
     n = News(
         user_id=2,
         text='Текст_2',
-        data=datetime.now()
+        date=datetime.now(),
+        update_date=None,
     )
     db.session.add(n)
     db.session.commit()
@@ -219,7 +266,8 @@ def comment_1(db):
         news_id=1,
         user_id=1,
         text='Текст_1',
-        data=datetime.now(),
+        date=datetime.now(),
+        update_date=None,
     )
     db.session.add(c)
     db.session.commit()
@@ -232,7 +280,8 @@ def comment_2(db):
         news_id=1,
         user_id=2,
         text='Текст_2',
-        data=datetime.now(),
+        date=datetime.now(),
+        update_date=None,
     )
     db.session.add(c)
     db.session.commit()

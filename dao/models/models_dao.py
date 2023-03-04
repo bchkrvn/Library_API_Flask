@@ -7,9 +7,9 @@ from marshmallow import Schema, fields
 class Book(db.Model):
     __tablename__ = 'book'
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String)
-    is_in_lib = db.Column(db.Boolean)
-    author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
+    title = db.Column(db.String, nullable=False)
+    is_in_lib = db.Column(db.Boolean, nullable=False)
+    author_id = db.Column(db.Integer, db.ForeignKey('author.id'), nullable=False)
     author = relationship('Author')
     reader_id = db.Column(db.Integer, db.ForeignKey('reader.id'))
     reader = relationship('Reader')
@@ -43,7 +43,7 @@ class Reader(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
 
 
@@ -65,17 +65,16 @@ class User(db.Model):
 class UserSchema(Schema):
     id = fields.Int(dump_only=True)
     username = fields.Str()
-    password = fields.Str()
     role = fields.Str()
 
 
 class News(db.Model):
     __tablename__ = 'news'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
-    text = db.Column(db.String)
-    data = db.Column(db.DateTime)
+    text = db.Column(db.String(255), nullable=False)
+    data = db.Column(db.DateTime, nullable=False)
 
 
 class NewsSchema(Schema):
@@ -88,12 +87,12 @@ class NewsSchema(Schema):
 class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
-    news_id = db.Column(db.Integer, db.ForeignKey('news.id'))
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'), nullable=False)
     news = relationship('News')
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
-    text = db.Column(db.String)
-    data = db.Column(db.DateTime)
+    text = db.Column(db.String, nullable=False)
+    data = db.Column(db.DateTime, nullable=False)
 
 
 class CommentSchema(Schema):

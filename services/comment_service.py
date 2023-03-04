@@ -16,9 +16,8 @@ class CommentService:
     def get_by_news_id(self, n_id):
         return self.comment_dao.get_by_news_id(n_id)
 
-    def create(self, data, u_id):
+    def create(self, data):
         news = self.news_service.get_one(data['news_id'])
-        data['user_id'] = u_id
         data['data'] = datetime.datetime.now()
         new_comment = Comment(**data)
         self.comment_dao.save(new_comment)

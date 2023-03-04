@@ -1,10 +1,10 @@
 import calendar
 import datetime
 
-from services.users_service import UserService
-from flask import abort, current_app
 import jwt
 
+from services.users_service import UserService
+from flask import abort, current_app
 
 class AuthService:
     def __init__(self, user_service: UserService):

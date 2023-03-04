@@ -1,10 +1,8 @@
-import base64
-import hashlib
-import hmac
-from flask import abort, current_app
+from flask import abort
 from dao.models.models_dao import User
 from dao.users_dao import UserDAO
 from services.readers_service import ReaderService
+from tools.security import get_hash, compare_password
 
 
 class UserService:
@@ -28,8 +26,7 @@ class UserService:
         return user
 
     def create(self, data):
-        if 'role' not in data:
-            data['role'] = 'user'
+        data['role'] = 'user'
         data['password'] = self.get_hash(data['password'])
         user = User(**data)
         self.dao.save(user)
@@ -39,8 +36,7 @@ class UserService:
         user = self.get_one(data['id'])
 
         user.username = data.get('username')
-        user.password = self.get_hash(data['password'])
-        user.role = data.get('role')
+        user.password = get_hash(data['password'])
         self.dao.save(user)
 
     def update_partial(self, data):
@@ -49,36 +45,19 @@ class UserService:
         if 'username' in data:
             user.username = data.get('username')
         if 'password' in data:
-            user.password = self.get_hash(data['password'])
-        if 'role' in data:
-            user.role = data.get('role')
+            user.password = get_hash(data['password'])
         self.dao.save(user)
 
     def delete(self, id_):
         self.dao.delete(id_)
         self.reader_service.delete(id_)
 
-    def get_hash(self, password):
-        hash_password = hashlib.pbkdf2_hmac(
-            current_app.config["HASH_NAME"],
-            password.encode('utf-8'),
-            current_app.config["PWD_HASH_SALT"],
-            current_app.config["PWD_HASH_ITERATIONS"]
-        )
-        return base64.b64encode(hash_password)
+    def change_password(self, data):
+        user = self.get_one(data['user_id'])
 
-    def compare_password(self, right_password, other_password) -> bool:
-        decode_right_password = base64.b64decode(right_password)
-        hash_other_password = hashlib.pbkdf2_hmac(
-            current_app.config["HASH_NAME"],
-            other_password.encode('utf-8'),
-            current_app.config["PWD_HASH_SALT"],
-            current_app.config["PWD_HASH_ITERATIONS"]
-        )
-        return hmac.compare_digest(decode_right_password, hash_other_password)
-
-    # def get_user_from_token(self) -> User:
-    #     data = request.headers['Authorization']
-    #     token = data.split('Bearer ')[-1]
-    #     user_data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGO])
-    #     return self.get_by_username(user_data['username'])
+        if compare_password(user.password, data['old_password']):
+            new_password = data.get('new_password')
+            user.password = get_hash(new_password)
+            self.dao.save(user)
+        else:
+            abort(400)

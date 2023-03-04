@@ -5,9 +5,11 @@ from container import auth_service
 
 auth_ns = Namespace('auth')
 
+
 @auth_ns.route('/')
 class AuthsViews(Resource):
     def post(self):
+        """ Создание токена для пользователя """
         data = request.json
         if not data:
             abort(400)
@@ -22,6 +24,7 @@ class AuthsViews(Resource):
         return tokens, 200
 
     def put(self):
+        """ Обновление токена пользователя """
         data = request.json
         if not data:
             abort(400)
@@ -31,5 +34,4 @@ class AuthsViews(Resource):
             abort(400)
 
         tokens = auth_service.approve_refresh_token(refresh_token)
-
         return tokens

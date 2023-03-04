@@ -2,25 +2,25 @@ from flask_restx import Namespace, Resource
 from flask import request, abort
 
 from container import comment_service
-from helpers.decorators import auth_required
+from helpers.decorators import auth_required, user_required
 
 comment_ns = Namespace('comments')
 
 
-@comment_ns.route('/<int:id_>')
+@comment_ns.route('/<int:c_id>')
 class CommentView(Resource):
     @auth_required
-    def put(self, id_):
+    def put(self, c_id):
         data = request.json
         if not data:
             abort(400)
 
-        data['id'] = id_
+        data['id'] = c_id
         comment_service.update(data)
 
         return '', 204
 
-    @auth_required
-    def delete(self, id_):
-        comment_service.delete(id_)
+    @user_required
+    def delete(self, c_id, u_id):
+        comment_service.delete(c_id, u_id)
         return '', 204

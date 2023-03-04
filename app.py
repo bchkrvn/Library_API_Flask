@@ -1,7 +1,7 @@
 from flask import Flask
-from flask_restx import Api
 
-from config import Config
+from api.api import api
+from config import Config, config
 from setup_db import db
 from views.auth_views import auth_ns
 from views.authors_views import author_ns
@@ -21,7 +21,7 @@ def create_app(app_config: Config):
 
 def register_extensions(appliacation_: Flask):
     db.init_app(appliacation_)
-    api = Api(appliacation_)
+    api.init_app(appliacation_)
 
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
@@ -32,7 +32,7 @@ def register_extensions(appliacation_: Flask):
     api.add_namespace(comment_ns)
 
 
-app_conf = Config()
+app_conf = config
 app = create_app(app_conf)
 
 with app.app_context():

@@ -5,7 +5,7 @@ from container import news_service, comment_service
 from dao.models.models_dao import NewsSchema, CommentSchema
 from helpers.decorators import auth_required, user_required
 
-news_ns = Namespace('news')
+news_ns = Namespace('news', 'Страница для получения новостей')
 news_schema = NewsSchema()
 newss_schema = NewsSchema(many=True)
 comment_schema = CommentSchema()
@@ -14,6 +14,7 @@ comments_schema = CommentSchema(many=True)
 
 @news_ns.route('/')
 class NewsViews(Resource):
+    @news_ns.doc(description='Get all news')
     @auth_required
     def get(self):
         news = news_service.get_all()
@@ -49,6 +50,7 @@ class NewssViews(Resource):
             abort(400)
 
         data['news_id'] = n_id
+        data['user_id'] = u_id
         comment_service.create(data)
 
         return '', 201
@@ -66,5 +68,5 @@ class NewssViews(Resource):
 
     @user_required
     def delete(self, n_id, u_id):
-        news_service.delete(n_id)
+        news_service.delete(n_id, u_id)
         return '', 204

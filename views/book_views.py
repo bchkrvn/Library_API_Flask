@@ -1,6 +1,8 @@
 from flask_restx import Resource, Namespace
 from flask import request, abort
 
+from api.models import book
+from api.parsers import books_get, books_post
 from container import books_service
 from dao.models.models_dao import BookSchema
 from helpers.decorators import admin_required, auth_required
@@ -12,14 +14,14 @@ books_schema = BookSchema(many=True)
 
 @book_ns.route('/')
 class BooksViews(Resource):
+    @book_ns.expect(books_get)
+    @book_ns.marshal_with(book, as_list=True, code=200, description='OK')
     @auth_required
     def get(self):
-        section = request.values.get('section')
-        author_id = request.values.get('author_id')
-        reader_id = request.values.get('reader_id')
-        books = books_service.filter_books(author_id, reader_id, section)
-        return books_schema.dump(books), 200
+        books = books_service.filter_books(**books_get.parse_args())
+        return books
 
+    @book_ns.expect(books_post)
     @admin_required
     def post(self):
         data = request.json
@@ -31,10 +33,10 @@ class BooksViews(Resource):
 
 @book_ns.route('/<int:id_>')
 class BookViews(Resource):
+    @book_ns.marshal_with(book, code=200, description='OK')
     @auth_required
     def get(self, id_):
-        book = books_service.get_one(id_)
-        return book_schema.dump(book), 200
+        return books_service.get_one(id_)
 
     @admin_required
     def put(self, id_):

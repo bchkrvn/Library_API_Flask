@@ -9,13 +9,14 @@ comment_ns = Namespace('comments')
 
 @comment_ns.route('/<int:c_id>')
 class CommentView(Resource):
-    @auth_required
-    def put(self, c_id):
+    @user_required
+    def put(self, c_id, u_id):
         data = request.json
         if not data:
             abort(400)
 
         data['id'] = c_id
+        data['user_id'] = u_id
         comment_service.update(data)
 
         return '', 204

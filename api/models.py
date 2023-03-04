@@ -28,7 +28,8 @@ news: Model = api.model('Новость', {
     'id': fields.Integer(required=True, example=1),
     'user_id': fields.String(required=True, example=1),
     'text': fields.String(required=True, max_length=255, example='Текст новости'),
-    'data': fields.DateTime(required=True, example='2000-01-01 00:00:00.000000')
+    'date': fields.DateTime(required=True, example='2000-01-01 00:00:00.000000'),
+    'update_date': fields.DateTime(required=False, example='2000-01-01 00:00:00.000000')
 })
 
 comment: Model = api.model('Комментарий', {
@@ -36,5 +37,6 @@ comment: Model = api.model('Комментарий', {
     'news_id': fields.Integer(required=True, example=1),
     'user_id': fields.Integer(required=True, example=2),
     'text': fields.Integer(required=True, example='Текст комментария'),
-    'data': fields.Integer(required=True, example='2000-01-01 00:00:00.000000'),
+    'date': fields.Integer(required=True, example='2000-01-01 00:00:00.000000'),
+    'update_date': fields.DateTime(required=False, example='2000-01-01 00:00:00.000000')
 })

@@ -18,17 +18,21 @@ class CommentService:
 
     def create(self, data):
         news = self.news_service.get_one(data['news_id'])
-        data['data'] = datetime.datetime.now()
+        user = self.user_service.get_one(data['user_id'])
+        if not data.get('text'):
+            abort(400)
+        data['date'] = datetime.datetime.now()
         new_comment = Comment(**data)
         self.comment_dao.save(new_comment)
 
-    def update(self, data, u_id):
+    def update(self, data):
         comment = self.comment_dao.get_one(data['id'])
-        user = self.user_service.get_one(u_id)
+        user = self.user_service.get_one(data['user_id'])
         if comment.user_id != user.id and user.role != 'admin':
             abort(403)
+
         comment.text = data.get('text')
-        comment.data = datetime.datetime.now()
+        comment.update_date = datetime.datetime.now()
         self.comment_dao.save(comment)
 
     def delete(self, n_id, u_id):

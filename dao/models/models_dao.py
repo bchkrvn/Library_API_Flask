@@ -74,14 +74,16 @@ class News(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
     text = db.Column(db.String(255), nullable=False)
-    data = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    update_date = db.Column(db.DateTime)
 
 
 class NewsSchema(Schema):
     id = fields.Int(dump_only=True)
     user_id = fields.Int()
     text = fields.Str()
-    data = fields.DateTime()
+    date = fields.DateTime()
+    update_date = fields.DateTime()
 
 
 class Comment(db.Model):
@@ -92,7 +94,8 @@ class Comment(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
     text = db.Column(db.String, nullable=False)
-    data = db.Column(db.DateTime, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    update_date = db.Column(db.DateTime)
 
 
 class CommentSchema(Schema):
@@ -100,4 +103,5 @@ class CommentSchema(Schema):
     news_id = fields.Int()
     user_id = fields.Int()
     text = fields.Str()
-    data = fields.DateTime()
+    date = fields.DateTime()
+    update_date = fields.DateTime()

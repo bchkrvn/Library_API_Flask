@@ -27,7 +27,7 @@ class UserService:
 
     def create(self, data):
         data['role'] = 'user'
-        data['password'] = self.get_hash(data['password'])
+        data['password'] = get_hash(data['password'])
         user = User(**data)
         self.dao.save(user)
         self.reader_service.create(user)
@@ -36,20 +36,11 @@ class UserService:
         user = self.get_one(data['id'])
 
         user.username = data.get('username')
-        user.password = get_hash(data['password'])
-        self.dao.save(user)
-
-    def update_partial(self, data):
-        user = self.get_one(data['id'])
-
-        if 'username' in data:
-            user.username = data.get('username')
-        if 'password' in data:
-            user.password = get_hash(data['password'])
         self.dao.save(user)
 
     def delete(self, id_):
-        self.dao.delete(id_)
+        user = self.get_one(id_)
+        self.dao.delete(user)
         self.reader_service.delete(id_)
 
     def change_password(self, data):

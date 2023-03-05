@@ -11,10 +11,10 @@ class AuthorService:
         return self.dao.get_all()
 
     def get_one(self, id_):
-        book = self.dao.get_one(id_)
-        if not book:
+        author = self.dao.get_one(id_)
+        if not author:
             abort(404, f'author with id={id_} not found')
-        return book
+        return author
 
     def create(self, data):
         new_author = Author(**data)

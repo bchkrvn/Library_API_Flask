@@ -18,7 +18,7 @@ class NewsService:
     def get_one(self, n_id):
         news = self.news_dao.get_one(n_id)
         if not news:
-            abort(400, f'news id={n_id} not found')
+            abort(404, f'news id={n_id} not found')
 
         return news
 

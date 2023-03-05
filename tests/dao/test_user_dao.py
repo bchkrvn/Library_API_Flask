@@ -57,7 +57,7 @@ class TestUserDAO:
         assert user.role == user_1.role, "role пользователя не совпадает"
 
     def test_delete(self, user_1, user_dao):
-        user_dao.delete(user_1.id)
+        user_dao.delete(user_1)
         users = user_dao.get_all()
 
         assert len(users) == 0, 'Пользователь не удален'

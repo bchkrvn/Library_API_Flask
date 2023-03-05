@@ -16,6 +16,12 @@ class CommentService:
     def get_by_news_id(self, n_id):
         return self.comment_dao.get_by_news_id(n_id)
 
+    def get_one(self, c_id):
+        comment = self.comment_dao.get_one(c_id)
+        if not comment:
+            abort(404, f'comment id={c_id} not found')
+        return comment
+
     def create(self, data):
         news = self.news_service.get_one(data['news_id'])
         user = self.user_service.get_one(data['user_id'])
@@ -26,19 +32,19 @@ class CommentService:
         self.comment_dao.save(new_comment)
 
     def update(self, data):
-        comment = self.comment_dao.get_one(data['id'])
+        comment = self.get_one(data['id'])
         user = self.user_service.get_one(data['user_id'])
         if comment.user_id != user.id and user.role != 'admin':
             abort(403)
-
+        if data.get('text') == '':
+            abort(400)
         comment.text = data.get('text')
         comment.update_date = datetime.datetime.now()
         self.comment_dao.save(comment)
 
-    def delete(self, n_id, u_id):
-        comment = self.comment_dao.get_one(n_id)
+    def delete(self, c_id, u_id):
+        comment = self.get_one(c_id)
         user = self.user_service.get_one(u_id)
         if comment.user_id != user.id and user.role != 'admin':
             abort(403)
         self.comment_dao.delete(comment)
-

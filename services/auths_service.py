@@ -6,16 +6,17 @@ import jwt
 from services.users_service import UserService
 from flask import abort, current_app
 
+from tools.security import compare_password
+
+
 class AuthService:
     def __init__(self, user_service: UserService):
         self.user_service = user_service
 
-    def generate_token(self, username, password, is_refresh=True):
+    def generate_token(self, username, password, is_refresh=False):
         user = self.user_service.get_by_username(username)
-
         if not is_refresh:
-            is_right_password = self.user_service.compare_password(user.password, password)
-            print(2)
+            is_right_password = compare_password(user.password, password)
             if not is_right_password:
                 abort(400, 'wrong password')
         data = {

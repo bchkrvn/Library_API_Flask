@@ -62,15 +62,6 @@ class UserViews(Resource):
         return '', 204
 
     @admin_required
-    def patch(self, u_id):
-        user_data = request.json
-        if not user_data:
-            abort(400)
-        user_data['id'] = u_id
-        user_service.update_partial(user_data)
-        return '', 204
-
-    @admin_required
     def delete(self, u_id):
         user_service.delete(u_id)
         return '', 204

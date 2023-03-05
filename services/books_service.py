@@ -2,10 +2,12 @@ from dao.books_dao import BookDAO
 from flask import abort
 
 from dao.models.models_dao import Book
+from services.authors_service import AuthorService
+from services.readers_service import ReaderService
 
 
 class BookService:
-    def __init__(self, dao: BookDAO, author_service, reader_service):
+    def __init__(self, dao: BookDAO, author_service: AuthorService, reader_service: ReaderService):
         self.dao = dao
         self.author_service = author_service
         self.reader_service = reader_service
@@ -16,10 +18,10 @@ class BookService:
     def get_one(self, id_):
         book = self.dao.get_one(id_)
         if not book:
-            abort(404,  f'book with id={id_} not found')
+            abort(404, f'book with id={id_} not found')
         return book
 
-    def filter_books(self, author_id, reader_id, section):
+    def filter_books(self, author_id=None, reader_id=None, section=None):
         result = self.dao.get_all_to_filter()
         if section == 'in':
             result = self.dao.get_by_available(result, True)
@@ -47,9 +49,13 @@ class BookService:
     def update(self, data):
         book = self.get_one(data.get('id'))
         book.title = data.get('title')
-        book.is_in_lib = data.get('is_in_lib')
-        book.author_id = data.get('author_id')
-        book.reader_id = data.get('reader_id')
+        is_in_lib = data.get('is_in_lib')
+        if type(is_in_lib) is bool:
+            book.is_in_lib = data.get('is_in_lib')
+        else:
+            abort(400)
+        book.author = self.author_service.get_one(data.get('author_id'))
+        book.reader = self.reader_service.get_one(data.get('reader_id'))
         self.dao.save(book)
 
     def update_partial(self, data):
@@ -57,11 +63,14 @@ class BookService:
         if 'title' in data:
             book.title = data.get('title')
         if 'is_in_lib' in data:
-            book.is_in_lib = data.get('is_in_lib')
+            if type(data.get('is_in_lib')) is bool:
+                book.is_in_lib = data.get('is_in_lib')
+            else:
+                abort(400)
         if 'author_id' in data:
-            book.author_id = data.get('author_id')
+            book.author = self.author_service.get_one(data.get('author_id'))
         if 'reader_id' in data:
-            book.reader_id = data.get('reader_id')
+            book.reader = self.reader_service.get_one(data.get('reader_id'))
         self.dao.save(book)
 
     def delete(self, id_):

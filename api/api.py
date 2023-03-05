@@ -1,6 +1,6 @@
 from flask_restx import Api
 
-api = Api(
+api: Api = Api(
     authorizations={
         "Bearer": {"type": "apiKey", "in": "header", "name": "Authorization"}
     },

@@ -1,3 +1,5 @@
+import functools
+
 from flask import request, abort, current_app
 import jwt
 
@@ -6,6 +8,7 @@ from container import user_service
 
 
 def auth_required(func):
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:
             abort(401)
@@ -23,6 +26,7 @@ def auth_required(func):
 
 
 def admin_required(func):
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:
             abort(401)
@@ -44,6 +48,7 @@ def admin_required(func):
 
 
 def user_required(func):
+    @functools.wraps(func)
     def wrapper(*args, **kwargs):
         data = request.headers['Authorization']
         token = data.split('Bearer ')[-1]

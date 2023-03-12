@@ -1,6 +1,7 @@
 from flask_restx import Resource, Namespace
 from flask import request, abort
 
+from api.models import author
 from container import author_service
 from dao.models.models_dao import AuthorSchema
 from helpers.decorators import admin_required, auth_required
@@ -12,10 +13,10 @@ authors_schema = AuthorSchema(many=True)
 
 @author_ns.route('/')
 class AuthorsViews(Resource):
+    @author_ns.marshal_with(author, as_list=True, code=200, description='OK')
     @auth_required
     def get(self):
-        authors = author_service.get_all()
-        return authors_schema.dump(authors), 200
+        return author_service.get_all()
 
     @admin_required
     def post(self):
@@ -28,10 +29,10 @@ class AuthorsViews(Resource):
 
 @author_ns.route('/<int:id_>')
 class AuthorViews(Resource):
+    @author_ns.marshal_with(author, as_list=False, code=200, description='OK')
     @auth_required
     def get(self, id_):
-        author = author_service.get_one(id_)
-        return author_schema.dump(author), 200
+        return author_service.get_one(id_)
 
     @admin_required
     def put(self, id_):

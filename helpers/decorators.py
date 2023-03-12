@@ -18,7 +18,7 @@ def auth_required(func):
         try:
             jwt.decode(token, current_app.config["JWT_SECRET"], algorithms=[current_app.config["JWT_ALGO"]])
         except Exception as e:
-            abort(400)
+            abort(401, 'You are not authorized')
 
         return func(*args, **kwargs)
 
@@ -37,10 +37,10 @@ def admin_required(func):
             user = jwt.decode(token, current_app.config["JWT_SECRET"], algorithms=[current_app.config["JWT_ALGO"]])
             role = user.get('role', 'user')
         except Exception as e:
-            abort(400)
+            abort(401, 'You are not authorized')
 
         if role != 'admin':
-            abort(403)
+            abort(403, 'You are not admin')
 
         return func(*args, **kwargs)
 
@@ -56,7 +56,7 @@ def user_required(func):
             user_data = jwt.decode(token, current_app.config["JWT_SECRET"], algorithms=[current_app.config["JWT_ALGO"]])
             user = user_service.get_by_username(user_data['username'])
         except Exception as e:
-            abort(400)
+            abort(401, 'You are not authorized')
 
         return func(*args, **kwargs, u_id=user.id)
 

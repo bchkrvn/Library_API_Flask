@@ -27,7 +27,7 @@ book: Model = api.model('Книга', {
     'id': fields.Integer(required=True, example=1),
     'title': fields.String(required=True, example='Сказки'),
     'is_in_lib': fields.Boolean(required=True, example='True'),
-    'author_id': fields.Integer(required=True, example=2),
+    'author_id': fields.Integer(required=True, example=1),
     'author': fields.Nested(author),
     'reader_id': fields.Integer(example=1),
     'reader': fields.Nested(reader),

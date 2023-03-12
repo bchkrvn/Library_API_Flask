@@ -1,24 +1,34 @@
 from flask_restx import Resource, Namespace
 from flask import request, abort
 
+from api.models import user
+from api.parsers import user_post_register, user_post_password, user_put
 from container import user_service
-from dao.models.models_dao import UserSchema
 from helpers.decorators import admin_required, user_required
 
 user_ns = Namespace('users', 'Страница для работы с пользователями')
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
 
 
 @user_ns.route('/')
 class UsersViews(Resource):
+    @user_ns.marshal_with(user, as_list=False, code=200, description='OK')
+    @user_ns.response(401, 'Unauthorized')
     @user_required
     def get(self, u_id):
-        user = user_service.get_one(u_id)
-        return user_schema.dump(user), 200
+        """
+        Получить информацию о пользователе, доступно только пользователю
+        """
+        return user_service.get_one(u_id)
 
+    @user_ns.expect(user_put)
+    @user_ns.response(400, 'BadRequest')
+    @user_ns.response(204, 'NoContent')
+    @user_ns.response(401, 'Unauthorized')
     @user_required
     def put(self, u_id):
+        """
+        Обновить информацию о пользователе, доступно только пользователю
+        """
         user_data = request.json
         if not user_data:
             abort(400)
@@ -26,34 +36,39 @@ class UsersViews(Resource):
         user_service.update(user_data)
         return '', 204
 
-    @user_required
-    def patch(self, u_id):
-        user_data = request.json
-        if not user_data:
-            abort(400)
-        user_data['id'] = u_id
-        user_service.update_partial(user_data)
-        return '', 204
-
+    @user_ns.response(204, 'NoContent')
+    @user_ns.response(401, 'Unauthorized')
     @user_required
     def delete(self, u_id):
+        """
+        Удалить пользователя, доступно только пользователю
+        """
         user_service.delete(u_id)
         return '', 204
 
 
 @user_ns.route('/<int:u_id>')
 class UserViews(Resource):
-
+    @user_ns.response(404, 'NotFound')
+    @user_ns.marshal_with(user, as_list=False, code=200, description='OK')
     @admin_required
     def get(self, u_id):
         """
-        Получение информации о пользователе
+        Получение информации о пользователе, доступно администратору
         """
-        user = user_service.get_one(u_id)
-        return user_schema.dump(user), 200
+        return user_service.get_one(u_id)
 
+    @user_ns.response(404, 'NotFound')
+    @user_ns.response(400, 'BadRequest')
+    @user_ns.response(204, 'NoContent')
+    @user_ns.response(401, 'Unauthorized')
+    @user_ns.response(403, 'Forbidden')
+    @user_ns.expect(user_put)
     @admin_required
     def put(self, u_id):
+        """
+        Обновление информации о пользователе, доступно администратору
+        """
         user_data = request.json
         if not user_data:
             abort(400)
@@ -61,22 +76,39 @@ class UserViews(Resource):
         user_service.update(user_data)
         return '', 204
 
+    @user_ns.response(404, 'NotFound')
+    @user_ns.response(204, 'NoContent')
+    @user_ns.response(401, 'Unauthorized')
+    @user_ns.response(403, 'Forbidden')
     @admin_required
     def delete(self, u_id):
+        """
+        Удаление пользователя, доступно администратору
+        :param u_id:
+        :return:
+        """
         user_service.delete(u_id)
         return '', 204
 
 
 @user_ns.route('/all')
 class UserAllViews(Resource):
+    @user_ns.response(401, 'Unauthorized')
+    @user_ns.response(403, 'Forbidden')
+    @user_ns.marshal_with(user, as_list=True, code=200, description='OK')
     @admin_required
-    def get(self, u_id):
-        users = user_service.get_all()
-        return users_schema.dump(users), 200
+    def get(self):
+        """
+        Получение всех пользователей, доступно администратору
+        """
+        return user_service.get_all()
 
 
 @user_ns.route('/register')
 class UserRegisterView(Resource):
+    @user_ns.response(201, 'Created')
+    @user_ns.response(400, 'BadRequest')
+    @user_ns.expect(user_post_register)
     def post(self):
         """
         Страница регистрации нового пользователя
@@ -90,8 +122,17 @@ class UserRegisterView(Resource):
 
 @user_ns.route('/password')
 class UserPasswordView(Resource):
+
+    @user_ns.response(204, 'NoContent')
+    @user_ns.response(400, 'BadRequest')
+    @user_ns.response(401, 'Unauthorized')
+    @user_ns.response(404, 'NotFound')
+    @user_ns.expect(user_post_password)
     @user_required
     def post(self, u_id):
+        """
+        Страница для смены пароля для пользователя
+        """
         passwords = request.json
         if ['old_password', 'new_password'] != list(passwords.keys()):
             abort(400)

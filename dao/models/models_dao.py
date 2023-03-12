@@ -62,12 +62,6 @@ class User(db.Model):
     role = db.Column(db.String)
 
 
-class UserSchema(Schema):
-    id = fields.Int(dump_only=True)
-    username = fields.Str()
-    role = fields.Str()
-
-
 class News(db.Model):
     __tablename__ = 'news'
     id = db.Column(db.Integer, primary_key=True)

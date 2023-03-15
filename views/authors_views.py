@@ -20,9 +20,13 @@ class AuthorsViews(Resource):
 
     @admin_required
     def post(self):
-        data = request.json
+        data: dict = request.json
+
         if not data:
-            abort(400)
+            abort(400, 'Data did not send')
+        if {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
+            abort(400, 'Wrong data')
+
         author_service.create(data)
         return '', 201
 
@@ -37,8 +41,12 @@ class AuthorViews(Resource):
     @admin_required
     def put(self, id_):
         data = request.json
+
         if not data:
-            abort(400)
+            abort(400, 'Data did not send')
+        if {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
+            abort(400, 'Wrong data')
+
         data['id'] = id_
         author_service.update(data)
         return '', 204
@@ -47,7 +55,10 @@ class AuthorViews(Resource):
     def patch(self, id_):
         data = request.json
         if not data:
-            abort(400)
+            abort(400, 'Data did not send')
+        if set(data.keys()) in {'first_name', 'last_name', 'middle_name'}:
+            abort(400, 'Wrong key')
+
         data['id'] = id_
         author_service.update_partial(data)
         return '', 204

@@ -286,3 +286,21 @@ def comment_2(db):
     db.session.add(c)
     db.session.commit()
     return c
+
+
+@pytest.fixture
+def headers_user(user_1, auth_service):
+    tokens = auth_service.generate_token(user_1.username, '1111')
+    access_token = tokens['access_token']
+    headers = {
+        'Authorization': f'Bearer {access_token}'}
+    return headers
+
+
+@pytest.fixture
+def headers_admin(admin, auth_service):
+    tokens = auth_service.generate_token(admin.username, '1111')
+    access_token = tokens['access_token']
+    headers = {
+        'Authorization': f'Bearer {access_token}'}
+    return headers

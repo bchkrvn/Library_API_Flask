@@ -11,7 +11,7 @@ def auth_required(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:
-            abort(401)
+            abort(401, "Headers don't have token")
         data = request.headers['Authorization']
         token = data.split('Bearer ')[-1]
 

@@ -12,12 +12,12 @@ class AuthsViews(Resource):
         """ Создание токена для пользователя """
         data = request.json
         if not data:
-            abort(400)
+            abort(400, "Data didn't send")
         username = data.get('username')
         password = data.get('password')
 
         if None in [username, password]:
-            abort(400)
+            abort(400, 'username or password is None')
 
         tokens = auth_service.generate_token(username, password)
 

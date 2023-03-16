@@ -28,6 +28,7 @@ class BooksViews(Resource):
     @book_ns.response(201, 'Created')
     @book_ns.response(400, 'BadRequest')
     @book_ns.response(401, 'Unauthorized')
+    @book_ns.response(403, 'Forbidden')
     @book_ns.response(404, 'NotFound')
     @admin_required
     def post(self):
@@ -36,7 +37,12 @@ class BooksViews(Resource):
         """
         data = request.json
         if not data:
-            abort(400)
+            abort(400, "Data didn't send")
+        elif set(data.keys()) != {'title', 'author_id'}:
+            abort(400, 'Wrong keys')
+        elif None or '' in data.values():
+            abort(400, "Values didn't send")
+
         books_service.create(data)
         return '', 201
 
@@ -66,7 +72,12 @@ class BookViews(Resource):
         """
         data = request.json
         if not data:
-            abort(400)
+            abort(400, "Data didn't send")
+        elif set(data.keys()) != {'title', 'author_id', 'reader_id', 'is_in_lib'}:
+            abort(400, 'Wrong keys')
+        elif None or '' in [value for key, value in data.items() if key != 'reader_id']:
+            abort(400, "Values didn't send")
+
         data['id'] = id_
         books_service.update(data)
         return '', 204
@@ -83,7 +94,11 @@ class BookViews(Resource):
         """
         data = request.json
         if not data:
-            abort(400)
+            abort(400, "Data didn't send")
+        elif not set(data.keys()) <= {'title', 'author_id', 'reader_id', 'is_in_lib'}:
+            abort(400, 'Wrong keys')
+        elif None or '' in [value for key, value in data.items() if key != 'reader_id']:
+            abort(400, "Values didn't send")
         data['id'] = id_
         books_service.update_partial(data)
         return '', 204
@@ -100,7 +115,7 @@ class BookViews(Resource):
         return '', 204
 
 
-@book_ns.route('/give')
+@book_ns.route('/give/')
 class BookGiveViews(Resource):
     @book_ns.response(204, 'NoContent')
     @book_ns.expect(books_give)
@@ -114,14 +129,17 @@ class BookGiveViews(Resource):
         """
         data = request.json
         if not data:
-            abort(400)
-        if ['reader_id', 'book_id'] == data.keys():
-            abort(400)
+            abort(400, "Data didn't send")
+        elif {'reader_id', 'book_id'} != set(data.keys()):
+            abort(400, "Wrong keys")
+        elif any([type(item) is not int for item in data.values()]):
+            abort(400, "Values must be integer")
+
         books_service.give_book_to_reader(data)
         return '', 204
 
 
-@book_ns.route('/get')
+@book_ns.route('/get/')
 class BookGetViews(Resource):
     @book_ns.expect(books_get)
     @book_ns.response(204, 'NoContent')
@@ -132,12 +150,15 @@ class BookGetViews(Resource):
     def post(self):
         """
         Страница для получения книги от читателя, доступна администратору
-        :return:
         """
         data = request.json
+
         if not data:
-            abort(400)
-        if 'book_id' == data.keys():
-            abort(400)
+            abort(400, "Data didn't send")
+        elif 'book_id' not in list(data.keys()):
+            abort(400, "Wrong keys")
+        elif type(data['book_id']) is not int:
+            abort(400, "Values must be integer")
+
         books_service.get_book_from_reader(data)
         return '', 204

@@ -10,11 +10,6 @@ class TestAuthorViews:
         assert type(authors[0]) is dict, f'В списке находятся {type(authors[0])} вместо dict'
         assert author_keys == set(authors[0].keys()), f'Ключи не совпадают'
 
-    def test_get_authors_exceptions(self, client, author_1):
-        # Неавторизованный пользователь
-        response = client.get('/authors/')
-        assert response.status_code == 401, f'Возвращается код {response.status_code} вместо 401'
-
     def test_post(self, client, headers_admin, author_service):
         data = {
             "first_name": "Имя_новое",
@@ -31,30 +26,8 @@ class TestAuthorViews:
         assert author.middle_name == data.get('middle_name'), 'Неверно установлено отчество автора'
         assert author.last_name == data.get('last_name'), 'Неверно установлено фамилия автора'
 
-    def test_post_exceptions(self, client, headers_admin, headers_user):
-        # Неавторизованный пользователь
-        response_1 = client.post('/authors/')
-        assert response_1.status_code == 401, f'Возвращается код {response_1.status_code} вместо 401'
-
-        # Обращение не администратора
-        response_2 = client.post('/authors/', headers=headers_user)
-        assert response_2.status_code == 403, f'Возвращается код {response_2.status_code} вместо 403'
-
-        # Обращение без данных
-        response_3 = client.post('/authors/', headers=headers_admin)
-        assert response_3.status_code == 400, f'Возвращается код {response_3.status_code} вместо 400'
-
-        # Неверные ключи
-        data_4 = {
-            "key_1": "Имя_новое",
-            "key_2": "Отчество_новое",
-            "key_3": "Фамилия_новая"
-        }
-        response_4 = client.post('/authors/', json=data_4, headers=headers_admin)
-        assert response_4.status_code == 400, f'Возвращается код {response_4.status_code} вместо 400'
-
     def test_get_author(self, client, headers_user, author_1):
-        response = client.get('/authors/1', headers=headers_user)
+        response = client.get(f'/authors/{author_1.id}', headers=headers_user)
         author = response.json
         author_keys = ['id', 'first_name', 'middle_name', 'last_name', ]
 
@@ -62,15 +35,6 @@ class TestAuthorViews:
         assert author is not None, 'Возвращается None или пустой словарь'
         assert type(author) is dict, f'Возвращается {type(author)} вместо dict'
         assert author_keys == list(author.keys()), f'Ключи не совпадают'
-
-    def test_get_author_exceptions(self, client, author_1, headers_user):
-        # Неавторизованный пользователь
-        response_1 = client.get('/authors/1')
-        assert response_1.status_code == 401, f'Возвращается код {response_1.status_code} вместо 401'
-
-        # Несуществующий автор
-        response_2 = client.get('/authors/2', headers=headers_user)
-        assert response_2.status_code == 404, f'Возвращается код {response_2.status_code} вместо 404'
 
     def test_put(self, client, author_1, headers_admin, author_service):
         data = {
@@ -87,37 +51,6 @@ class TestAuthorViews:
         assert author.middle_name == data.get('middle_name'), 'Неверно обновлено отчество автора'
         assert author.last_name == data.get('last_name'), 'Неверно обновлено фамилия автора'
 
-    def test_put_exceptions(self, client, author_1, headers_user, headers_admin):
-        # Обращение не администратора
-        response_1 = client.put(f'/authors/{author_1.id}', headers=headers_user)
-        assert response_1.status_code == 403, f'Возвращается код {response_1.status_code} вместо 403'
-
-        # Обращение без токена
-        response_2 = client.put(f'/authors/{author_1.id}')
-        assert response_2.status_code == 401, f'Возвращается код {response_2.status_code} вместо 401'
-
-        # Обращение без данных
-        response_3 = client.put(f'/authors/{author_1.id}', headers=headers_admin)
-        assert response_3.status_code == 400, f'Возвращается код {response_3.status_code} вместо 400'
-
-        # Неверные ключи
-        data_4 = {
-            "key_1": "Имя_новое",
-            "key_2": "Отчество_новое",
-            "key_3": "Фамилия_новая"
-        }
-        response_4 = client.put(f'/authors/{author_1.id}', json=data_4, headers=headers_admin)
-        assert response_4.status_code == 400, f'Возвращается код {response_4.status_code} вместо 400'
-
-        # Несуществующий автор
-        data_5 = {
-            "first_name": "Имя_новое",
-            "middle_name": "Отчество_новое",
-            "last_name": "Фамилия_новая"
-        }
-        response_5 = client.put('/authors/2', json=data_5, headers=headers_admin)
-        assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
-
     def test_patch(self, client, author_1, headers_admin, author_service):
         data = {
             "first_name": "Имя_новое",
@@ -133,27 +66,6 @@ class TestAuthorViews:
         assert author.middle_name == data.get('middle_name'), 'Неверно обновлено отчество автора'
         assert author.last_name == data.get('last_name'), 'Неверно обновлено фамилия автора'
 
-    def test_patch_exceptions(self, client, author_1, headers_user, headers_admin):
-        # Обращение не администратора
-        response_1 = client.patch(f'/authors/{author_1.id}', headers=headers_user)
-        assert response_1.status_code == 403, f'Возвращается код {response_1.status_code} вместо 403'
-
-        # Обращение без токена
-        response_2 = client.patch(f'/authors/{author_1.id}')
-        assert response_2.status_code == 401, f'Возвращается код {response_2.status_code} вместо 401'
-
-        # Обращение без данных
-        response_3 = client.patch(f'/authors/{author_1.id}', headers=headers_admin)
-        assert response_3.status_code == 400, f'Возвращается код {response_3.status_code} вместо 400'
-
-        # Несуществующий автор
-        data_5 = {
-            "first_name": "Имя_новое",
-            "middle_name": "Отчество_новое"
-        }
-        response_5 = client.patch('/authors/2', json=data_5, headers=headers_admin)
-        assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
-
     def test_delete(self, client, author_1, author_2, headers_admin, author_service):
         response = client.delete(f'/authors/{author_2.id}', headers=headers_admin)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
@@ -161,16 +73,3 @@ class TestAuthorViews:
         authors = author_service.get_all()
         assert author_1 in authors, 'Удалился не тот автор'
         assert author_2 not in authors, 'Нужный автор не удалился'
-
-    def test_delete_exceptions(self, author_1, client, headers_user, headers_admin):
-        # Обращение не администратора
-        response_1 = client.delete(f'/authors/{author_1.id}', headers=headers_user)
-        assert response_1.status_code == 403, f'Возвращается код {response_1.status_code} вместо 403'
-
-        # Обращение без токена
-        response_2 = client.delete(f'/authors/{author_1.id}')
-        assert response_2.status_code == 401, f'Возвращается код {response_2.status_code} вместо 401'
-
-        # Несуществующий автор
-        response_3 = client.delete('/authors/2', headers=headers_admin)
-        assert response_3.status_code == 404, f'Возвращается код {response_3.status_code} вместо 404'

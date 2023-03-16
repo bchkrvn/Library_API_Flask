@@ -24,8 +24,10 @@ class AuthorsViews(Resource):
 
         if not data:
             abort(400, 'Data did not send')
-        if {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
+        elif {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
             abort(400, 'Wrong data')
+        elif None or '' in data.values():
+            abort(400, "Values didn't send")
 
         author_service.create(data)
         return '', 201
@@ -56,7 +58,7 @@ class AuthorViews(Resource):
         data = request.json
         if not data:
             abort(400, 'Data did not send')
-        if set(data.keys()) in {'first_name', 'last_name', 'middle_name'}:
+        if not set(data.keys()) <= {'first_name', 'last_name', 'middle_name'}:
             abort(400, 'Wrong key')
 
         data['id'] = id_

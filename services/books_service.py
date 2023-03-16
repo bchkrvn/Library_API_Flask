@@ -50,27 +50,51 @@ class BookService:
         book = self.get_one(data.get('id'))
         book.title = data.get('title')
         is_in_lib = data.get('is_in_lib')
+        reader_id = data.get('reader_id')
+
         if type(is_in_lib) is bool:
             book.is_in_lib = data.get('is_in_lib')
         else:
-            abort(400)
+            abort(400, 'Wrong data')
+
         book.author = self.author_service.get_one(data.get('author_id'))
-        book.reader = self.reader_service.get_one(data.get('reader_id'))
+
+        if is_in_lib:
+            book.reader = None
+        elif reader_id:
+            book.reader = self.reader_service.get_one(data.get('reader_id'))
+        else:
+            abort(400, "Didn't send reader_id if not in lib")
+
         self.dao.save(book)
 
     def update_partial(self, data):
         book = self.get_one(data.get('id'))
-        if 'title' in data:
-            book.title = data.get('title')
-        if 'is_in_lib' in data:
-            if type(data.get('is_in_lib')) is bool:
-                book.is_in_lib = data.get('is_in_lib')
+        title = data.get('title', None)
+        if title:
+            book.title = title
+
+        author_id = data.get('author_id', None)
+        if author_id:
+            book.author = self.author_service.get_one(author_id)
+
+        is_in_lib = data.get('is_in_lib', None)
+        reader_id = data.get('reader_id', None)
+
+        if type(is_in_lib) is bool:
+
+            if is_in_lib:
+                book.is_in_lib = is_in_lib
+                book.reader_id = None
+            elif reader_id:
+                book.is_in_lib = is_in_lib
+                book.reader = self.reader_service.get_one(reader_id)
             else:
-                abort(400)
-        if 'author_id' in data:
-            book.author = self.author_service.get_one(data.get('author_id'))
-        if 'reader_id' in data:
-            book.reader = self.reader_service.get_one(data.get('reader_id'))
+                abort(400, "Didn't send reader_id if not in lib")
+
+        elif is_in_lib is not None:
+            abort(400, 'is in lib must be bool')
+
         self.dao.save(book)
 
     def delete(self, id_):
@@ -79,8 +103,9 @@ class BookService:
 
     def give_book_to_reader(self, data):
         reader_id = data.get('reader_id')
-        book_id = data.get('book_id')
         reader = self.reader_service.get_one(reader_id)
+
+        book_id = data.get('book_id')
         book = self.get_one(book_id)
 
         if book.is_in_lib:

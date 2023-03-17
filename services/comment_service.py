@@ -22,22 +22,24 @@ class CommentService:
             abort(404, f'comment id={c_id} not found')
         return comment
 
+    def get_all(self):
+        return self.comment_dao.get_all()
+
     def create(self, data):
         news = self.news_service.get_one(data['news_id'])
-        user = self.user_service.get_one(data['user_id'])
-        if not data.get('text'):
-            abort(400)
+
         data['date'] = datetime.datetime.now()
         new_comment = Comment(**data)
         self.comment_dao.save(new_comment)
+        self.news_service.add_comments_to_amount(news)
 
     def update(self, data):
         comment = self.get_one(data['id'])
         user = self.user_service.get_one(data['user_id'])
+
         if comment.user_id != user.id and user.role != 'admin':
             abort(403)
-        if data.get('text') == '':
-            abort(400)
+
         comment.text = data.get('text')
         comment.update_date = datetime.datetime.now()
         self.comment_dao.save(comment)
@@ -45,6 +47,13 @@ class CommentService:
     def delete(self, c_id, u_id):
         comment = self.get_one(c_id)
         user = self.user_service.get_one(u_id)
+        news = self.news_service.get_one(comment.news_id)
+
         if comment.user_id != user.id and user.role != 'admin':
-            abort(403)
+            abort(403, "You don't have access")
+
         self.comment_dao.delete(comment)
+        self.news_service.remove_comments_to_amount(news)
+
+    def delete_by_news_id(self, n_id):
+        self.comment_dao.delete_by_news_id(n_id)

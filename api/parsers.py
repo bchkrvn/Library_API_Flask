@@ -28,7 +28,7 @@ books_get_from_reader.add_argument(name='book_id', type=int, location='json', re
 
 # User views
 user_post_register: RequestParser = RequestParser()
-user_post_register.add_argument(name='username', type=str, location='json', required=True, )
+user_post_register.add_argument(name='username', type=str, location='json', required=True)
 user_post_register.add_argument(name='password', type=str, location='json', required=True)
 
 user_post_password: RequestParser = RequestParser()
@@ -37,3 +37,11 @@ user_post_password.add_argument(name='new_password', type=str, location='json', 
 
 user_put: RequestParser = RequestParser()
 user_put.add_argument(name='username', type=str, location='json', required=True)
+
+# News views
+news_parser: RequestParser = RequestParser()
+news_parser.add_argument(name='text', type=str, location='json', required=True)
+
+# Comment views
+comments_parser: RequestParser = RequestParser()
+comments_parser.add_argument(name='text', type=str, location='json', required=True)

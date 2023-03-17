@@ -50,6 +50,9 @@ def admin_required(func):
 def user_required(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
+        if 'Authorization' not in request.headers:
+            abort(401, "You didn't send token")
+
         data = request.headers['Authorization']
         token = data.split('Bearer ')[-1]
         try:

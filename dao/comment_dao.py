@@ -21,3 +21,7 @@ class CommentDAO:
     def delete(self, comment):
         self.session.delete(comment)
         self.session.commit()
+
+    def delete_by_news_id(self, n_id):
+        self.session.query(Comment).filter(Comment.news_id == n_id).delete()
+        self.session.commit()

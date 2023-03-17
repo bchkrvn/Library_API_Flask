@@ -28,7 +28,7 @@ user_service = UserService(user_dao, reader_service)
 auth_service = AuthService(user_service)
 
 news_dao = NewsDAO(db.session)
-news_service = NewsService(news_dao, user_service)
-
 comment_dao = CommentDAO(db.session)
+
+news_service = NewsService(news_dao, user_service, comment_dao)
 comment_service = CommentService(comment_dao, news_service, user_service)

@@ -12,7 +12,6 @@ author: Model = api.model('Автор', {
 user: Model = api.model('Пользователь', {
     'id': fields.Integer(required=True, example=1),
     'username': fields.String(required=True, example=1),
-    'role': fields.String(example='user')
 })
 
 reader: Model = api.model('Читатель', {
@@ -45,10 +44,9 @@ news: Model = api.model('Новость', {
 comment: Model = api.model('Комментарий', {
     'id': fields.Integer(required=True, example=1),
     'news_id': fields.Integer(required=True, example=1),
-    'news': fields.Nested(news),
     'user_id': fields.Integer(required=True, example=2),
     'user': fields.Nested(user),
     'text': fields.Integer(required=True, example='Текст комментария'),
-    'date': fields.Integer(required=True, example='2000-01-01 00:00:00.000000'),
+    'date': fields.DateTime(required=True, example='2000-01-01 00:00:00.000000'),
     'update_date': fields.DateTime(required=False, example='2000-01-01 00:00:00.000000')
 })

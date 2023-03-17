@@ -68,6 +68,7 @@ class News(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
     text = db.Column(db.String(255), nullable=False)
+    amount_comments = db.Column(db.Integer)
     date = db.Column(db.DateTime, nullable=False)
     update_date = db.Column(db.DateTime)
 

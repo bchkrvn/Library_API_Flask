@@ -1,10 +1,11 @@
 class TestAuthorViews:
     def test_get_authors(self, client, headers_user, author_1, author_2):
         response = client.get('/authors/', headers=headers_user)
+        assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
+
         authors: dict = response.json
         author_keys = {'id', 'first_name', 'middle_name', 'last_name'}
 
-        assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
         assert authors is not None, 'Возвращается None или пустой список'
         assert type(authors) is list, f'Возвращается {type(authors)} вместо list'
         assert type(authors[0]) is dict, f'В списке находятся {type(authors[0])} вместо dict'

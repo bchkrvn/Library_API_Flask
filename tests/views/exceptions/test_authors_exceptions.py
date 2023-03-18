@@ -27,13 +27,13 @@ class TestAuthorViewsExceptions:
         assert response_4.status_code == 400, f'Возвращается код {response_4.status_code} вместо 400'
 
         # Пустые значения
-        data_4 = {
+        data_5 = {
             "first_name": "",
             "middle_name": "",
             "last_name": None
         }
-        response_4 = client.post('/authors/', json=data_4, headers=headers_admin)
-        assert response_4.status_code == 400, f'Возвращается код {response_4.status_code} вместо 400'
+        response_5 = client.post('/authors/', json=data_5, headers=headers_admin)
+        assert response_5.status_code == 400, f'Возвращается код {response_5.status_code} вместо 400'
 
     def test_get_author_exceptions(self, client, author_1, headers_user):
         # Неавторизованный пользователь

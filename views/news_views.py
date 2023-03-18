@@ -88,6 +88,7 @@ class OneNewsViews(Resource):
     @news_ns.response(204, 'NoContent')
     @news_ns.response(400, 'BadRequest')
     @news_ns.response(401, 'Unauthorized')
+    @news_ns.response(403, 'Forbidden')
     @news_ns.response(404, 'NotFound')
     @user_required
     def put(self, n_id, u_id):

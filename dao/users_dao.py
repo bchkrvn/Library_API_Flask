@@ -1,23 +1,13 @@
+from dao.base_dao import BaseDAO
 from dao.models.models_dao import User
 
 
-class UserDAO:
+class UserDAO(BaseDAO):
+    __model__ = User
+
     def __init__(self, session):
-        self.session = session
-
-    def get_all(self):
-        return self.session.query(User).all()
-
-    def get_one(self, id_):
-        return self.session.query(User).get(id_)
+        super().__init__(session=session)
 
     def get_by_name(self, name):
-        return self.session.query(User).filter(User.username == name).first()
+        return self._session.query(User).filter(User.username == name).first()
 
-    def save(self, user: User):
-        self.session.add(user)
-        self.session.commit()
-
-    def delete(self, user):
-        self.session.delete(user)
-        self.session.commit()

@@ -1,20 +1,9 @@
+from dao.base_dao import BaseDAO
 from dao.models.models_dao import Author
 
 
-class AuthorDAO:
+class AuthorDAO(BaseDAO):
+    __model__ = Author
+
     def __init__(self, session):
-        self.session = session
-
-    def get_all(self):
-        return self.session.query(Author).all()
-
-    def get_one(self, id_):
-        return self.session.query(Author).get(id_)
-
-    def save(self, author):
-        self.session.add(author)
-        self.session.commit()
-
-    def delete(self, author):
-        self.session.delete(author)
-        self.session.commit()
+        super().__init__(session=session)

@@ -1,4 +1,5 @@
 import os
+import dotenv
 from typing import Type
 
 
@@ -22,17 +23,16 @@ class TestingConfig(Config):
 class DevelopmentConfig(Config):
     DEBUG = True
     SQLALCHEMY_ECHO = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
 
 
 class ProductionConfig(Config):
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
 
 
 class ConfigFactory:
 
-    flask_env = os.getenv('FLASK_ENV', 'development')
+    dotenv.load_dotenv(override=True)
+    flask_env = os.getenv('FLASK_ENV')
 
     @classmethod
     def get_config(cls) -> Type[Config]:

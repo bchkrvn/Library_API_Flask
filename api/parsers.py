@@ -64,3 +64,12 @@ news_parser.add_argument(name='text', type=str, location='json', required=True)
 # Comment views
 comments_parser: RequestParser = RequestParser()
 comments_parser.add_argument(name='text', type=str, location='json', required=True)
+
+
+# Auth views
+auth_post: RequestParser = RequestParser()
+auth_post.add_argument(name='username', type=str, location='json', required=True)
+auth_post.add_argument(name='password', type=str, location='json', required=True)
+
+auth_put: RequestParser = RequestParser()
+auth_put.add_argument(name='refresh_token', type=str, location='json', required=True)

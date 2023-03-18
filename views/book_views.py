@@ -40,7 +40,7 @@ class BooksViews(Resource):
             abort(400, "Data didn't send")
         elif set(data.keys()) != {'title', 'author_id'}:
             abort(400, 'Wrong keys')
-        elif None or '' in data.values():
+        elif None in data.values() or '' in data.values():
             abort(400, "Values didn't send")
 
         books_service.create(data)
@@ -64,6 +64,7 @@ class BookViews(Resource):
     @book_ns.response(204, 'NoContent')
     @book_ns.response(400, 'BadRequest')
     @book_ns.response(401, 'Unauthorized')
+    @book_ns.response(403, 'Forbidden')
     @book_ns.response(404, 'NotFound')
     @admin_required
     def put(self, id_):
@@ -75,7 +76,8 @@ class BookViews(Resource):
             abort(400, "Data didn't send")
         elif set(data.keys()) != {'title', 'author_id', 'reader_id', 'is_in_lib'}:
             abort(400, 'Wrong keys')
-        elif None or '' in [value for key, value in data.items() if key != 'reader_id']:
+        values_without_reader = [value for key, value in data.items() if key != 'reader_id']
+        if None in values_without_reader or '' in values_without_reader:
             abort(400, "Values didn't send")
 
         data['id'] = id_
@@ -86,6 +88,7 @@ class BookViews(Resource):
     @book_ns.response(204, 'NoContent')
     @book_ns.response(400, 'BadRequest')
     @book_ns.response(401, 'Unauthorized')
+    @book_ns.response(403, 'Forbidden')
     @book_ns.response(404, 'NotFound')
     @admin_required
     def patch(self, id_):
@@ -93,18 +96,22 @@ class BookViews(Resource):
         Страница для частичного обновления книги, доступна администратору
         """
         data = request.json
+
         if not data:
             abort(400, "Data didn't send")
         elif not set(data.keys()) <= {'title', 'author_id', 'reader_id', 'is_in_lib'}:
             abort(400, 'Wrong keys')
-        elif None or '' in [value for key, value in data.items() if key != 'reader_id']:
+        values_without_reader = [value for key, value in data.items() if key != 'reader_id']
+        if None in values_without_reader or '' in values_without_reader:
             abort(400, "Values didn't send")
+
         data['id'] = id_
         books_service.update_partial(data)
         return '', 204
 
     @book_ns.response(204, 'NoContent')
     @book_ns.response(401, 'Unauthorized')
+    @book_ns.response(403, 'Forbidden')
     @book_ns.response(404, 'NotFound')
     @admin_required
     def delete(self, id_):
@@ -121,6 +128,7 @@ class BookGiveViews(Resource):
     @book_ns.expect(books_give)
     @book_ns.response(400, 'BadRequest')
     @book_ns.response(401, 'Unauthorized')
+    @book_ns.response(403, 'Forbidden')
     @book_ns.response(404, 'NotFound')
     @admin_required
     def post(self):
@@ -128,6 +136,7 @@ class BookGiveViews(Resource):
         Страница для передачи книги читателю, доступна администратору
         """
         data = request.json
+
         if not data:
             abort(400, "Data didn't send")
         elif {'reader_id', 'book_id'} != set(data.keys()):
@@ -145,6 +154,7 @@ class BookGetViews(Resource):
     @book_ns.response(204, 'NoContent')
     @book_ns.response(400, 'BadRequest')
     @book_ns.response(401, 'Unauthorized')
+    @book_ns.response(403, 'Forbidden')
     @book_ns.response(404, 'NotFound')
     @admin_required
     def post(self):

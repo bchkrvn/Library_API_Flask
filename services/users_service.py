@@ -1,4 +1,6 @@
 from flask import abort
+from sqlalchemy.exc import IntegrityError
+
 from dao.models.models_dao import User
 from dao.users_dao import UserDAO
 from services.readers_service import ReaderService
@@ -28,7 +30,12 @@ class UserService:
     def create(self, data):
         data['role'] = 'user'
         data['password'] = get_hash(data['password'])
-        user = User(**data)
+
+        try:
+            user = User(**data)
+        except IntegrityError:
+            abort(400, 'username already exists')
+
         self.dao.save(user)
         self.reader_service.create(user)
 
@@ -51,4 +58,4 @@ class UserService:
             user.password = get_hash(new_password)
             self.dao.save(user)
         else:
-            abort(400)
+            abort(400, 'Wrong password')

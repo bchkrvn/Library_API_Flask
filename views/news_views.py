@@ -35,7 +35,7 @@ class NewsViews(Resource):
 
         if not data:
             abort(400, "You didn't send data")
-        elif 'text' not in data:
+        elif {'text', } != set(data.keys()):
             abort(400, "Wrong keys")
         elif data['text'] in [None, '']:
             abort(400, "You didn't send text")
@@ -73,7 +73,7 @@ class OneNewsViews(Resource):
 
         if not data:
             abort(400, "You didn't send data")
-        elif 'text' not in data:
+        elif {'text', } != set(data.keys()):
             abort(400, "Wrong keys")
         elif data['text'] in [None, '']:
             abort(400, "You didn't send text")
@@ -95,7 +95,7 @@ class OneNewsViews(Resource):
         data = request.json
         if not data:
             abort(400, "You didn't send data")
-        elif 'text' not in data:
+        elif {'text', } != set(data.keys()):
             abort(400, "Wrong keys")
         elif data['text'] in [None, '']:
             abort(400, "You didn't send text")

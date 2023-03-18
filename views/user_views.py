@@ -113,10 +113,17 @@ class UserRegisterView(Resource):
         """
         Страница регистрации нового пользователя
         """
-        user_data = request.json
-        if not user_data:
-            abort(400)
-        user_service.create(user_data)
+        data = request.json
+
+        if not data:
+            abort(400, 'Data did not send')
+        elif not set(data.keys()) <= {'username', 'password'}:
+            abort(400, 'Wrong key')
+        values = data.values()
+        if None in values or '' in values:
+            abort(400, 'Wrong values')
+
+        user_service.create(data)
         return '', 201
 
 
@@ -131,11 +138,18 @@ class UserPasswordView(Resource):
     @user_required
     def post(self, u_id):
         """
-        Страница для смены пароля для пользователя
+        Страница для смены пароля пользователя
         """
         passwords = request.json
-        if ['old_password', 'new_password'] != list(passwords.keys()):
-            abort(400)
+
+        if not passwords:
+            abort(400, 'Data did not send')
+        elif not set(passwords.keys()) <= {'old_password', 'new_password'}:
+            abort(400, 'Wrong key')
+        values = passwords.values()
+        if None in values or '' in values:
+            abort(400, 'Wrong values')
+
         passwords['user_id'] = u_id
         user_service.change_password(passwords)
         return '', 204

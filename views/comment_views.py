@@ -22,7 +22,7 @@ class CommentView(Resource):
 
         if not data:
             abort(400, "Data didn't send")
-        elif 'text' not in data:
+        elif {'text', } != set(data.keys()):
             abort(400, "Wrong key")
         elif data['text'] in [None, '']:
             abort(400, "Text didn't send")

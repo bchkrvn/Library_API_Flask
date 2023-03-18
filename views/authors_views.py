@@ -35,8 +35,9 @@ class AuthorsViews(Resource):
             abort(400, 'Data did not send')
         elif {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
             abort(400, 'Wrong data')
-        elif None or '' in data.values():
-            abort(400, "Values didn't send")
+        values = data.values()
+        if None in values or '' in values:
+            abort(400, 'Wrong values')
 
         author_service.create(data)
         return '', 201
@@ -65,8 +66,11 @@ class AuthorViews(Resource):
 
         if not data:
             abort(400, 'Data did not send')
-        if {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
+        elif {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
             abort(400, 'Wrong data')
+        values = data.values()
+        if None in values or '' in values:
+            abort(400, 'Wrong values')
 
         data['id'] = id_
         author_service.update(data)
@@ -82,10 +86,14 @@ class AuthorViews(Resource):
     def patch(self, id_):
         """Страница для частичного изменения автора, доступна администратору"""
         data = request.json
+
         if not data:
             abort(400, 'Data did not send')
-        if not set(data.keys()) <= {'first_name', 'last_name', 'middle_name'}:
+        elif not set(data.keys()) <= {'first_name', 'last_name', 'middle_name'}:
             abort(400, 'Wrong key')
+        values = data.values()
+        if None in values or '' in values:
+            abort(400, 'Wrong values')
 
         data['id'] = id_
         author_service.update_partial(data)

@@ -33,8 +33,6 @@ class ReadersViews(Resource):
             abort(400, "You didn't send data")
         elif set(data.keys()) != {"first_name", "last_name"}:
             abort(400, "Wrong keys")
-        elif None or '' in data.values():
-            abort(400, "Wrong values")
 
         data['id'] = u_id
         reader_service.update(data)
@@ -52,8 +50,6 @@ class ReadersViews(Resource):
             abort(400, "You didn't send data")
         elif set(data.keys()) <= {"first_name", "last_name"}:
             abort(400, "Wrong keys")
-        elif None or '' in data.values():
-            abort(400, "Wrong values")
 
         data['id'] = u_id
         reader_service.update_partial(data)
@@ -82,7 +78,10 @@ class ReaderViews(Resource):
 
         data = request.json
         if not data:
-            abort(400)
+            abort(400, "You didn't send data")
+        elif set(data.keys()) != {"first_name", "last_name"}:
+            abort(400, "Wrong keys")
+
         data['id'] = u_id
         reader_service.update(data)
         return '', 204
@@ -97,7 +96,10 @@ class ReaderViews(Resource):
 
         data = request.json
         if not data:
-            abort(400)
+            abort(400, "You didn't send data")
+        elif set(data.keys()) <= {"first_name", "last_name"}:
+            abort(400, "Wrong keys")
+
         data['id'] = u_id
         reader_service.update_partial(data)
         return '', 204

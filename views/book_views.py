@@ -40,7 +40,8 @@ class BooksViews(Resource):
             abort(400, "Data didn't send")
         elif set(data.keys()) != {'title', 'author_id'}:
             abort(400, 'Wrong keys')
-        elif None in data.values() or '' in data.values():
+        values = data.values()
+        if None in values or '' in values:
             abort(400, "Values didn't send")
 
         books_service.create(data)
@@ -72,6 +73,7 @@ class BookViews(Resource):
         Страница для обновления информации о книге, доступна администратору
         """
         data = request.json
+
         if not data:
             abort(400, "Data didn't send")
         elif set(data.keys()) != {'title', 'author_id', 'reader_id', 'is_in_lib'}:
@@ -165,7 +167,7 @@ class BookGetViews(Resource):
 
         if not data:
             abort(400, "Data didn't send")
-        elif 'book_id' not in list(data.keys()):
+        elif {'book_id', } != set(data.keys()):
             abort(400, "Wrong keys")
         elif type(data['book_id']) is not int:
             abort(400, "Values must be integer")

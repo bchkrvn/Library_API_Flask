@@ -3,7 +3,7 @@ from flask import request, abort
 
 from container import auth_service
 
-auth_ns = Namespace('auth')
+auth_ns = Namespace('auth', "Страница для авторизации пользователя")
 
 
 @auth_ns.route('/')

@@ -68,7 +68,7 @@ class News(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
     text = db.Column(db.String(255), nullable=False)
-    amount_comments = db.Column(db.Integer)
+    amount_comments = db.Column(db.Integer, default=0)
     date = db.Column(db.DateTime, nullable=False)
     update_date = db.Column(db.DateTime)
 
@@ -78,6 +78,7 @@ class NewsSchema(Schema):
     user_id = fields.Int()
     text = fields.Str()
     date = fields.DateTime()
+    amount_comments = fields.Integer()
     update_date = fields.DateTime()
 
 

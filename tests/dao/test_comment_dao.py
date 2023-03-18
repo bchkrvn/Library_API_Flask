@@ -62,8 +62,14 @@ class TestCommentDAO:
         assert comment.date == comment_1.date, "data комментария не совпадает"
         assert comment.update_date == comment_1.update_date, "data обновления комментария не совпадает"
 
-    def test_delete(self, comment_1, comment_dao):
+    def test_delete(self, comment_1, news_1, comment_dao):
         comment_dao.delete(comment_1)
+        comments = comment_dao.get_all()
+
+        assert len(comments) == 0, 'Комментарий не удален'
+
+    def test_delete_by_news_id(self, comment_1, news_1, comment_dao):
+        comment_dao.delete_by_news_id(news_1.id)
         comments = comment_dao.get_all()
 
         assert len(comments) == 0, 'Комментарий не удален'

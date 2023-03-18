@@ -37,6 +37,7 @@ news: Model = api.model('Новость', {
     'user_id': fields.String(required=True, example=1),
     'user': fields.Nested(user),
     'text': fields.String(required=True, max_length=255, example='Текст новости'),
+    'amount_comments': fields.Integer(required=True, example=1),
     'date': fields.DateTime(required=True, example='2000-01-01 00:00:00.000000'),
     'update_date': fields.DateTime(required=False, example='2000-01-01 00:00:00.000000')
 })

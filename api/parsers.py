@@ -25,6 +25,25 @@ books_give.add_argument(name='reader_id', type=int, location='json', required=Tr
 books_get_from_reader: RequestParser = RequestParser()
 books_get_from_reader.add_argument(name='book_id', type=int, location='json', required=True)
 
+# Author views
+author_post_put: RequestParser = RequestParser()
+author_post_put.add_argument(name='first_name', type=str, location='json', required=True)
+author_post_put.add_argument(name='last_name', type=str, location='json', required=True)
+author_post_put.add_argument(name='middle_name', type=str, location='json', required=True)
+
+author_patch: RequestParser = RequestParser()
+author_patch.add_argument(name='first_name', type=str, location='json', required=False)
+author_patch.add_argument(name='last_name', type=str, location='json', required=False)
+author_patch.add_argument(name='middle_name', type=str, location='json', required=False)
+
+# Reader views
+reader_put: RequestParser = RequestParser()
+reader_put.add_argument(name='first_name', type=str, location='json', required=True)
+reader_put.add_argument(name='last_name', type=str, location='json', required=True)
+
+reader_patch: RequestParser = RequestParser()
+reader_patch.add_argument(name='first_name', type=str, location='json', required=False)
+reader_patch.add_argument(name='last_name', type=str, location='json', required=False)
 
 # User views
 user_post_register: RequestParser = RequestParser()

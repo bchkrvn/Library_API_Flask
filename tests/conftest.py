@@ -109,8 +109,8 @@ def auth_service(user_service):
 
 
 @pytest.fixture
-def news_service(news_dao, user_service):
-    return NewsService(news_dao, user_service)
+def news_service(news_dao, user_service, comment_dao):
+    return NewsService(news_dao, user_service, comment_dao)
 
 
 @pytest.fixture

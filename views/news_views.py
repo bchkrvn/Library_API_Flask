@@ -37,7 +37,7 @@ class NewsViews(Resource):
             abort(400, "You didn't send data")
         elif 'text' not in data:
             abort(400, "Wrong keys")
-        elif data['text'] is None or '':
+        elif data['text'] in [None, '']:
             abort(400, "You didn't send text")
 
         data['user_id'] = u_id
@@ -75,7 +75,7 @@ class OneNewsViews(Resource):
             abort(400, "You didn't send data")
         elif 'text' not in data:
             abort(400, "Wrong keys")
-        elif data['text'] is None or '':
+        elif data['text'] in [None, '']:
             abort(400, "You didn't send text")
 
         data['news_id'] = n_id
@@ -97,7 +97,7 @@ class OneNewsViews(Resource):
             abort(400, "You didn't send data")
         elif 'text' not in data:
             abort(400, "Wrong keys")
-        elif data['text'] is None or '':
+        elif data['text'] in [None, '']:
             abort(400, "You didn't send text")
 
         data['n_id'] = n_id

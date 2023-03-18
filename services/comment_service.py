@@ -47,13 +47,13 @@ class CommentService:
     def delete(self, c_id, u_id):
         comment = self.get_one(c_id)
         user = self.user_service.get_one(u_id)
-        news = self.news_service.get_one(comment.news_id)
 
         if comment.user_id != user.id and user.role != 'admin':
             abort(403, "You don't have access")
 
+        news = self.news_service.get_one(comment.news_id)
         self.comment_dao.delete(comment)
-        self.news_service.remove_comments_to_amount(news)
+        self.news_service.remove_comments_from_amount(news)
 
     def delete_by_news_id(self, n_id):
         self.comment_dao.delete_by_news_id(n_id)

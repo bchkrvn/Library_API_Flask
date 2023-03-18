@@ -24,7 +24,7 @@ class NewsService:
         return news
 
     def create(self, data):
-        data['data'] = datetime.datetime.now()
+        data['date'] = datetime.datetime.now()
         new_news = News(**data)
         self.news_dao.save(new_news)
 
@@ -36,7 +36,7 @@ class NewsService:
             abort(403)
 
         news.text = data.get('text')
-        news.data = datetime.datetime.now()
+        news.update_date = datetime.datetime.now()
         self.news_dao.save(news)
 
     def delete(self, n_id, u_id):
@@ -53,6 +53,6 @@ class NewsService:
         news.amount_comments += 1
         self.news_dao.save(news)
 
-    def remove_comments_to_amount(self, news):
+    def remove_comments_from_amount(self, news):
         news.amount_comments -= 1
         self.news_dao.save(news)

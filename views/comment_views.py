@@ -24,7 +24,7 @@ class CommentView(Resource):
             abort(400, "Data didn't send")
         elif 'text' not in data:
             abort(400, "Wrong key")
-        elif data['text'] is None or '':
+        elif data['text'] in [None, '']:
             abort(400, "Text didn't send")
 
         data['id'] = c_id

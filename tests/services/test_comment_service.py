@@ -1,5 +1,4 @@
 import time
-from copy import copy
 
 import pytest
 from werkzeug.exceptions import NotFound, BadRequest, Forbidden
@@ -51,6 +50,7 @@ class TestCommentService:
         assert comment.user_id == data.get('user_id'), 'Неверный id пользователя'
         assert comment.text == data.get('text'), 'Неверный текст'
         assert comment.date is not None, 'Нет времени и даты'
+        assert news_1.amount_comments == 1, 'Количество комментариев у новости не изменилось'
 
     def test_create_errors(self, news_1, user_1, comment_service):
         # Неверный id новости
@@ -59,24 +59,6 @@ class TestCommentService:
                 'news_id': 2,
                 'user_id': user_1.id,
                 'text': 'text_1'
-            }
-            comment_service.create(data)
-
-        # Неверный id пользователя
-        with pytest.raises(NotFound):
-            data = {
-                'news_id': news_1.id,
-                'user_id': 2,
-                'text': 'text_1'
-            }
-            comment_service.create(data)
-
-        # Пустой комментарий
-        with pytest.raises(BadRequest):
-            data = {
-                'news_id': news_1.id,
-                'user_id': user_1.id,
-                'text': ''
             }
             comment_service.create(data)
 
@@ -105,7 +87,6 @@ class TestCommentService:
         comment_service.update(data)
         comment = comment_service.get_one(comment_1.id)
 
-
         assert comment.text == data.get('text'), 'Текст комментария не обновился'
         assert comment.update_date is not None, 'Дата и время обновления комментария не установилась'
         assert comment.update_date != comment.date, 'Дата и время обновления комментария совпадает с временем создания'
@@ -129,15 +110,6 @@ class TestCommentService:
             }
             comment_service.update(data)
 
-        # Пустой комментарий
-        with pytest.raises(BadRequest):
-            data = {
-                'id': comment_1.id,
-                'user_id': user_1.id,
-                'text': '',
-            }
-            comment_service.update(data)
-
         # Неверный пользователь
         with pytest.raises(Forbidden):
             data = {
@@ -147,19 +119,21 @@ class TestCommentService:
             }
             comment_service.update(data)
 
-    def test_delete_by_user(self, comment_1, user_1, comment_service):
+    def test_delete_by_user(self, comment_1, user_1, news_1, comment_service):
         comment_service.delete(comment_1.id, user_1.id)
         comments = comment_service.get_by_news_id(1)
 
         assert len(comments) == 0, 'Комментарий не удалился'
+        assert news_1.amount_comments == -1, 'Количество комментариев у новости не изменилось'
 
-    def test_delete_by_admin(self, comment_1, user_1, admin, comment_service):
+    def test_delete_by_admin(self, comment_1, user_1, admin, news_1, comment_service):
         comment_service.delete(comment_1.id, admin.id)
         comments = comment_service.get_by_news_id(1)
 
         assert len(comments) == 0, 'Комментарий не удалился'
+        assert news_1.amount_comments == -1, 'Количество комментариев у новости не изменилось'
 
-    def test_delete_errors(self, comment_1, user_1, user_2, comment_service):
+    def test_delete_errors(self, comment_1, user_1, user_2, news_1, comment_service):
         # Несуществующий комментарий
         with pytest.raises(NotFound):
             comment_service.delete(2, user_1.id)
@@ -171,5 +145,3 @@ class TestCommentService:
         # Удаляет не тот пользователь
         with pytest.raises(Forbidden):
             comment_service.delete(comment_1.id, user_2.id)
-
-

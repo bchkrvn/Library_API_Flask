@@ -5,7 +5,7 @@ import hmac
 from flask import current_app
 
 
-def create_hash(password):
+def _create_hash(password):
     hash_password = hashlib.pbkdf2_hmac(
         current_app.config["HASH_NAME"],
         password.encode('utf-8'),
@@ -16,10 +16,10 @@ def create_hash(password):
 
 
 def get_hash(password):
-    return base64.b64encode(create_hash(password))
+    return base64.b64encode(_create_hash(password))
 
 
 def compare_password(right_password, other_password) -> bool:
     decode_right_password = base64.b64decode(right_password)
-    hash_other_password = create_hash(other_password)
+    hash_other_password = _create_hash(other_password)
     return hmac.compare_digest(decode_right_password, hash_other_password)

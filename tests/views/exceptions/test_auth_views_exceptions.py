@@ -12,6 +12,13 @@ class TestAuthViewsExceptions:
         response_2 = client.post('/auth/', json=data_2)
         assert response_2.status_code == 400, f'Статус код - {response_2.status_code} вместо 400'
 
+        data_2 = {
+            "username": '',
+            "password": ''
+        }
+        response_2 = client.post('/auth/', json=data_2)
+        assert response_2.status_code == 400, f'Статус код - {response_2.status_code} вместо 400'
+
         # Несуществующий пользователь
         data_3 = {
             "username": "wrong_username",
@@ -52,5 +59,3 @@ class TestAuthViewsExceptions:
         }
         response_4 = client.post('/auth/', json=data_4)
         assert response_4.status_code == 400, f'Статус код - {response_4.status_code} вместо 400'
-
-

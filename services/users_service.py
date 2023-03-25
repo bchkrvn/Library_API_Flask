@@ -1,6 +1,6 @@
-from flask import abort
 from sqlalchemy.exc import IntegrityError
 
+from flask import abort
 from dao.models.models_dao import User
 from dao.users_dao import UserDAO
 from services.readers_service import ReaderService
@@ -30,20 +30,20 @@ class UserService:
     def create(self, data):
         data['role'] = 'user'
         data['password'] = get_hash(data['password'])
-
+        user = User(**data)
         try:
-            user = User(**data)
+            self.dao.save(user)
         except IntegrityError:
-            abort(400, 'username already exists')
-
-        self.dao.save(user)
+            abort(400, 'username is not unique')
         self.reader_service.create(user)
 
     def update(self, data):
         user = self.get_one(data['id'])
-
         user.username = data.get('username')
-        self.dao.save(user)
+        try:
+            self.dao.save(user)
+        except IntegrityError:
+            abort(400, 'username is not unique')
 
     def delete(self, id_):
         user = self.get_one(id_)

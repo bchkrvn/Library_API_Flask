@@ -64,7 +64,7 @@ class TestUserService:
         assert reader.id == user.id, 'id читателя и пользователя не совпадают'
 
         # Повторяющийся username
-        with pytest.raises(IntegrityError):
+        with pytest.raises(BadRequest):
             data_2 = {
                 'username': 'name_1',
                 'password': '1111'
@@ -80,6 +80,7 @@ class TestUserService:
         user = user_service.get_one(user_1.id)
 
         assert user.username == data.get('username'), 'username не обновился'
+
         # Несуществующий пользователь
         with pytest.raises(NotFound):
             data = {
@@ -89,7 +90,7 @@ class TestUserService:
             user_service.update(data)
 
         # username уже есть
-        with pytest.raises(IntegrityError):
+        with pytest.raises(BadRequest):
             data = {
                 'id': user_1.id,
                 'username': user_2.username,

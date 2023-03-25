@@ -25,8 +25,7 @@ class ReaderService:
         self.dao.save(new_reader)
 
     def update(self, data):
-        id_ = data.get('id')
-        reader = self.get_one(id_)
+        reader = self.get_one(data.get('id'))
 
         reader.first_name = data.get('first_name')
         reader.last_name = data.get('last_name')

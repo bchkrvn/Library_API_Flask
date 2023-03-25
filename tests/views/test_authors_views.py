@@ -18,7 +18,6 @@ class TestAuthorViews:
             "last_name": "Фамилия_новая"
         }
         response = client.post('/authors/', json=data, headers=headers_admin)
-        print(response.json)
         assert response.status_code == 201, f'Возвращается код {response.status_code} вместо 201'
 
         author = author_service.get_all()[-1]

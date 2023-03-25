@@ -30,8 +30,14 @@ class UsersViews(Resource):
         Обновить информацию о пользователе, доступно только пользователю
         """
         user_data = request.json
+
         if not user_data:
-            abort(400)
+            abort(400, "data didn't send")
+        elif {'username'} != set(user_data.keys()):
+            abort(400, 'wrong key')
+        elif user_data['username'] in [None, '']:
+            abort(400, "wrong value")
+
         user_data['id'] = u_id
         user_service.update(user_data)
         return '', 204
@@ -70,8 +76,14 @@ class UserViews(Resource):
         Обновление информации о пользователе, доступно администратору
         """
         user_data = request.json
+
         if not user_data:
-            abort(400)
+            abort(400, "data didn't send")
+        elif {'username'} != set(user_data.keys()):
+            abort(400, 'wrong key')
+        elif user_data['username'] in [None, '']:
+            abort(400, "wrong value")
+
         user_data['id'] = u_id
         user_service.update(user_data)
         return '', 204
@@ -84,8 +96,6 @@ class UserViews(Resource):
     def delete(self, u_id):
         """
         Удаление пользователя, доступно администратору
-        :param u_id:
-        :return:
         """
         user_service.delete(u_id)
         return '', 204
@@ -117,7 +127,7 @@ class UserRegisterView(Resource):
 
         if not data:
             abort(400, 'Data did not send')
-        elif not set(data.keys()) <= {'username', 'password'}:
+        elif set(data.keys()) != {'username', 'password'}:
             abort(400, 'Wrong key')
         values = data.values()
         if None in values or '' in values:

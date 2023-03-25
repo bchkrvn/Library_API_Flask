@@ -48,7 +48,7 @@ class ReadersViews(Resource):
 
         if not data:
             abort(400, "You didn't send data")
-        elif set(data.keys()) <= {"first_name", "last_name"}:
+        elif not set(data.keys()) <= {"first_name", "last_name"}:
             abort(400, "Wrong keys")
 
         data['id'] = u_id
@@ -97,7 +97,7 @@ class ReaderViews(Resource):
         data = request.json
         if not data:
             abort(400, "You didn't send data")
-        elif set(data.keys()) <= {"first_name", "last_name"}:
+        elif not set(data.keys()) <= {"first_name", "last_name"}:
             abort(400, "Wrong keys")
 
         data['id'] = u_id

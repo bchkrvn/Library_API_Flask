@@ -4,12 +4,9 @@ from flask import request, abort
 from api.models import author
 from api.parsers import author_patch, author_post_put
 from container import author_service
-from dao.models.models_dao import AuthorSchema
 from helpers.decorators import admin_required, auth_required
 
 author_ns = Namespace('authors', "Страница для работы с авторами")
-author_schema = AuthorSchema()
-authors_schema = AuthorSchema(many=True)
 
 
 @author_ns.route('/')

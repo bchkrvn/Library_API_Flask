@@ -15,27 +15,12 @@ class Book(db.Model):
     reader = relationship('Reader')
 
 
-class BookSchema(Schema):
-    id = fields.Int(dump_only=True)
-    title = fields.Str()
-    is_in_lib = fields.Boolean()
-    author_id = fields.Int()
-    reader_id = fields.Int()
-
-
 class Author(db.Model):
     __tablename__ = 'author'
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String, nullable=False)
     middle_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
-
-
-class AuthorSchema(Schema):
-    id = fields.Int(dump_only=True)
-    first_name = fields.Str()
-    middle_name = fields.Str()
-    last_name = fields.Str()
 
 
 class Reader(db.Model):
@@ -45,13 +30,6 @@ class Reader(db.Model):
     last_name = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
-
-
-class ReaderSchema(Schema):
-    id = fields.Int(dump_only=True)
-    first_name = fields.Str()
-    last_name = fields.Str()
-    user_id = fields.Int()
 
 
 class User(db.Model):

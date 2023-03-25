@@ -4,11 +4,9 @@ from flask import request, abort
 from api.models import book
 from api.parsers import books_get, books_post, books_put, books_patch, books_give
 from container import books_service
-from dao.models.models_dao import BookSchema
 from helpers.decorators import admin_required, auth_required
 
 book_ns = Namespace('books', "Страница для работы с книгами")
-book_schema = BookSchema()
 
 
 @book_ns.route('/')

@@ -4,12 +4,9 @@ from flask import request, abort
 from api.models import reader
 from api.parsers import reader_put, reader_patch
 from container import reader_service
-from dao.models.models_dao import ReaderSchema
 from helpers.decorators import admin_required, user_required
 
 reader_ns = Namespace('readers', "Страница для работы с читателями")
-reader_schema = ReaderSchema()
-readers_schema = ReaderSchema(many=True)
 
 
 @reader_ns.route('/')

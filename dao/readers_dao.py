@@ -3,6 +3,9 @@ from dao.models.models_dao import Reader
 
 
 class ReaderDAO(BaseDAO):
+    """
+    DAO для работы с читателями
+    """
     __model__ = Reader
 
     def __init__(self, session):

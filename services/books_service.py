@@ -7,21 +7,42 @@ from services.readers_service import ReaderService
 
 
 class BookService:
+    """
+    Сервис для работы с книгами
+    """
+
     def __init__(self, dao: BookDAO, author_service: AuthorService, reader_service: ReaderService):
         self.dao = dao
         self.author_service = author_service
         self.reader_service = reader_service
 
-    def get_all(self):
+    def get_all(self) -> list[Book]:
+        """
+        Получить список всех книг
+        :return: list[Book]
+        """
         return self.dao.get_all()
 
-    def get_one(self, id_):
+    def get_one(self, id_: int) -> Book:
+        """
+        Получить книгу по ее id
+        :param id_: id книги
+        :return: Book
+        """
         book = self.dao.get_one(id_)
         if not book:
             abort(404, f'book with id={id_} not found')
         return book
 
-    def filter_books(self, author_id=None, reader_id=None, section=None):
+    def filter_books(self, author_id=None, reader_id=None, section=None) -> list[Book]:
+        """
+        Получить отфильтрованный список книг.
+        Отфильтровать можно по автору, читателю и наличию
+        :param author_id: id автора книги
+        :param reader_id: id читателя
+        :param section: наличие книги (in, out, all)
+        :return: list[Book]
+        """
         result = self.dao.get_all_to_filter()
         if section == 'in':
             result = self.dao.get_by_available(result, True)
@@ -40,6 +61,10 @@ class BookService:
         return self.dao.get_all(result)
 
     def create(self, data: dict):
+        """
+        Добавить новую книгу
+        :param data: данные о книге (название, автор)
+        """
         if 'author_id' in data:
             author_id = data.pop('author_id')
             author = self.author_service.get_one(author_id)
@@ -52,7 +77,11 @@ class BookService:
         new_book = Book(**data)
         self.dao.save(new_book)
 
-    def update(self, data):
+    def update(self, data: dict):
+        """
+        Обновить информацию о книге
+        :param data: информация для обновления (название, автор)
+        """
         book = self.get_one(data.get('id'))
         book.title = data.get('title')
         is_in_lib = data.get('is_in_lib')
@@ -74,7 +103,11 @@ class BookService:
 
         self.dao.save(book)
 
-    def update_partial(self, data):
+    def update_partial(self, data: dict):
+        """
+        Частично обновить информацию о книге
+        :param data: информация для обновления (название, автор)
+        """
         book = self.get_one(data.get('id'))
         title = data.get('title', None)
         if title:
@@ -103,11 +136,21 @@ class BookService:
 
         self.dao.save(book)
 
-    def delete(self, id_):
+    def delete(self, id_: int):
+        """
+        Удалить книгу по ее id
+        :param id_: id книги
+        :return:
+        """
         book = self.get_one(id_)
         self.dao.delete(book)
 
-    def give_book_to_reader(self, data):
+    def give_book_to_reader(self, data: dict):
+        """
+        Передать книгу читателю
+        :param data: данные, содержащие id книги и id читателя
+        :return:
+        """
         reader_id = data.get('reader_id')
         reader = self.reader_service.get_one(reader_id)
 
@@ -119,9 +162,13 @@ class BookService:
             book.reader = reader
             self.dao.save(book)
         else:
-            abort(400, f'book id={book_id} not in library')
+            abort(400, f'Book id={book_id} not in library')
 
-    def get_book_from_reader(self, data):
+    def get_book_from_reader(self, data: dict):
+        """
+        Получить книгу от читателя
+        :param data: данные, содержащие id книги
+        """
         book_id = data.get('book_id')
         book = self.get_one(book_id)
 

@@ -8,26 +8,48 @@ from tools.security import get_hash, compare_password
 
 
 class UserService:
+    """
+    Сервис для работы с пользователями
+    """
+
     def __init__(self, dao: UserDAO, reader_service: ReaderService):
         self.dao = dao
         self.reader_service = reader_service
 
-    def get_all(self):
+    def get_all(self) -> list[User]:
+        """
+        Получить всех пользователей
+        :return: list[User]
+        """
         return self.dao.get_all()
 
-    def get_one(self, id_):
+    def get_one(self, id_: int) -> User:
+        """
+        Получить пользователя по его id
+        :param id_: id пользователя
+        :return: User
+        """
         user = self.dao.get_one(id_)
         if not user:
             abort(404, f'User with id={id_} not found')
         return user
 
-    def get_by_username(self, username):
+    def get_by_username(self, username: str) -> User:
+        """
+        Получить пользователя по его никнейму
+        :param username: никнейм пользователя
+        :return: User
+        """
         user = self.dao.get_by_name(username)
         if not user:
             abort(404, f'User "{username}" not found')
         return user
 
-    def create(self, data):
+    def create(self, data: dict):
+        """
+        Создание нового пользователя
+        :param data: данные, содержащие никнейм и пароль
+        """
         data['role'] = 'user'
         data['password'] = get_hash(data['password'])
         user = User(**data)
@@ -37,7 +59,11 @@ class UserService:
             abort(400, 'username is not unique')
         self.reader_service.create(user)
 
-    def update(self, data):
+    def update(self, data: dict):
+        """
+        Обновить никнейм пользователя
+        :param data: словарь с новым никнеймом
+        """
         user = self.get_one(data['id'])
         user.username = data.get('username')
         try:
@@ -45,12 +71,20 @@ class UserService:
         except IntegrityError:
             abort(400, 'username is not unique')
 
-    def delete(self, id_):
+    def delete(self, id_: int):
+        """
+        Удалить пользователя по его id
+        :param id_: id пользователя
+        """
         user = self.get_one(id_)
         self.dao.delete(user)
         self.reader_service.delete(id_)
 
-    def change_password(self, data):
+    def change_password(self, data: dict):
+        """
+        Обновить пароль пользователя
+        :param data: данные, содержащие id пользователя, старый и новый пароль
+        """
         user = self.get_one(data['user_id'])
 
         if compare_password(user.password, data['old_password']):

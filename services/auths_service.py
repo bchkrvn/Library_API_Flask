@@ -10,10 +10,22 @@ from tools.security import compare_password
 
 
 class AuthService:
+    """
+    Сервис для работы с авторизацией
+    """
+
     def __init__(self, user_service: UserService):
         self.user_service = user_service
 
-    def generate_token(self, username, password, is_refresh=False):
+    def generate_token(self, username: str, password: str or None, is_refresh=False) -> dict:
+        """
+        Генерация или обновление токена для пользователя.
+        :param username: никнейм пользователя
+        :param password: пароль пользователя
+        :param is_refresh: True если токен обновляется
+        :return: access_token and refresh_token
+        """
+
         user = self.user_service.get_by_username(username)
         if not is_refresh:
             is_right_password = compare_password(user.password, password)
@@ -23,6 +35,7 @@ class AuthService:
             'username': user.username,
             'role': user.role,
         }
+
         min10 = datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
         data['exp'] = calendar.timegm(min10.timetuple())
         access_token = jwt.encode(data, current_app.config["JWT_SECRET"], algorithm=current_app.config["JWT_ALGO"])
@@ -38,7 +51,12 @@ class AuthService:
 
         return tokens
 
-    def approve_refresh_token(self, refresh_token):
+    def approve_refresh_token(self, refresh_token: str) -> dict:
+        """
+        Обновление токена пользователя на основе refresh_token
+        :param refresh_token: refresh_token
+        :return: access_token and refresh_token
+        """
         try:
             data = jwt.decode(refresh_token, current_app.config["JWT_SECRET"],
                               algorithms=[current_app.config["JWT_ALGO"]])

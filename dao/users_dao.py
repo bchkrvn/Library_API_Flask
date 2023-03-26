@@ -3,11 +3,18 @@ from dao.models.models_dao import User
 
 
 class UserDAO(BaseDAO):
+    """
+    DAO для работы с пользователями
+    """
     __model__ = User
 
     def __init__(self, session):
         super().__init__(session=session)
 
-    def get_by_name(self, name):
-        return self._session.query(self.__model__).filter(self.__model__.username == name).first()
-
+    def get_by_name(self, username: str) -> User:
+        """
+        Получить пользователя из БД по его никнейму
+        :param username: никнейм пользователя
+        :return: User
+        """
+        return self._session.query(self.__model__).filter(self.__model__.username == username).one()

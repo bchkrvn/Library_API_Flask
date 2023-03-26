@@ -9,5 +9,5 @@ class UserDAO(BaseDAO):
         super().__init__(session=session)
 
     def get_by_name(self, name):
-        return self._session.query(User).filter(User.username == name).first()
+        return self._session.query(self.__model__).filter(self.__model__.username == name).first()
 

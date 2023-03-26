@@ -39,9 +39,15 @@ class BookService:
 
         return self.dao.get_all(result)
 
-    def create(self, data):
-        author_id = data.get('author_id')
-        author = self.author_service.get_one(author_id)
+    def create(self, data: dict):
+        if 'author_id' in data:
+            author_id = data.pop('author_id')
+            author = self.author_service.get_one(author_id)
+        else:
+            first_name = data.pop('author_first_name')
+            last_name = data.pop('author_last_name')
+            author = self.author_service.get_by_name(first_name, last_name)
+        data['author'] = author
         data['is_in_lib'] = True
         new_book = Book(**data)
         self.dao.save(new_book)

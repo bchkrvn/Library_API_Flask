@@ -36,7 +36,7 @@ class BooksViews(Resource):
         data = request.json
         if not data:
             abort(400, "Data didn't send")
-        elif set(data.keys()) != {'title', 'author_id'}:
+        elif set(data.keys()) not in [{'title', 'author_id'}, {'title', 'author_first_name', 'author_last_name'}]:
             abort(400, 'Wrong keys')
         values = data.values()
         if None in values or '' in values:

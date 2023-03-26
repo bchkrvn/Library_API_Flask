@@ -7,3 +7,7 @@ class AuthorDAO(BaseDAO):
 
     def __init__(self, session):
         super().__init__(session=session)
+
+    def get_by_name(self, first_name, last_name):
+        return self._session.query(self.__model__).filter(self.__model__.first_name == first_name,
+                                                          self.__model__.last_name == last_name).first()

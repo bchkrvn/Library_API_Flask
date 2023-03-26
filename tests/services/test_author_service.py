@@ -27,6 +27,22 @@ class TestAuthorService:
         with pytest.raises(NotFound):
             author = author_service.get_one(2)
 
+    def test_get_by_name(self, author_1, author_service):
+        author = author_service.get_by_name(author_1.first_name, author_1.last_name)
+
+        assert author is not None, "Возвращается None вместо автора"
+        assert type(author) is Author, f'Возвращается не автор, а {type(author)}'
+        assert author.id == author_1.id, "id автора не совпадает"
+        assert author.first_name == author_1.first_name, "first_name автора не совпадают"
+        assert author.middle_name == author_1.middle_name, "middle_name автора не совпадают"
+        assert author.last_name == author_1.last_name, "last_name автора не совпадают"
+
+        # Несуществующий автор
+        with pytest.raises(NotFound):
+            author_2 = author_service.get_by_name('Wrong_name', author_1.last_name)
+        with pytest.raises(NotFound):
+            author_3 = author_service.get_by_name(author_1.first_name, 'wrong_last_name')
+
     def test_create(self, author_service):
         data = {
             'first_name': 'first_name',

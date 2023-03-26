@@ -33,12 +33,20 @@ class TestBookViewsExceptions:
         response_5 = client.post('/books/', json=data_5, headers=headers_admin)
         assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
 
-        # Пустые значения
         data_6 = {
+            "title": "Название",
+            "author_first_name": 'Wrong_first_name',
+            "author_last_name": 'Wrong_last_name'
+        }
+        response_5 = client.post('/books/', json=data_6, headers=headers_admin)
+        assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
+
+        # Пустые значения
+        data_7 = {
             "key_1": "",
             "key_2": None
         }
-        response_6 = client.post('/books/', json=data_6, headers=headers_admin)
+        response_6 = client.post('/books/', json=data_7, headers=headers_admin)
         assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'
 
     def test_get_book_exceptions(self, client, book_1, headers_user):

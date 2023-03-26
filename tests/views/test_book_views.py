@@ -11,17 +11,30 @@ class TestBookViews:
         assert book_keys == set(books[0].keys()), f'Ключи не совпадают'
 
     def test_post_book(self, client, headers_admin, book_service, author_1):
-        data = {
-            "title": "Название",
+        data_1 = {
+            "title": "Название_1",
             "author_id": 1
         }
-        response = client.post('/books/', json=data, headers=headers_admin)
+        response = client.post('/books/', json=data_1, headers=headers_admin)
         assert response.status_code == 201, f'Возвращается код {response.status_code} вместо 201'
 
         book = book_service.get_all()[-1]
         assert book is not None, f'Вместо автора вернулся None'
-        assert book.title == data.get('title'), 'Неверное название книги'
-        assert book.author_id == data.get('author_id'), 'Неверный id автора книги'
+        assert book.title == data_1.get('title'), 'Неверное название книги'
+        assert book.author == author_1, 'Неверный автор книги'
+
+        data_2 = {
+            'title': 'Название_2',
+            'author_first_name': author_1.first_name,
+            'author_last_name': author_1.last_name
+        }
+        response = client.post('/books/', json=data_2, headers=headers_admin)
+        assert response.status_code == 201, f'Возвращается код {response.status_code} вместо 201'
+
+        book = book_service.get_all()[-1]
+        assert book is not None, f'Вместо автора вернулся None'
+        assert book.title == data_2.get('title'), 'Неверное название книги'
+        assert book.author == author_1, 'Неверный автор книги'
 
     def test_get_book(self, client, book_1, headers_user):
         response = client.get(f'/books/{book_1.id}', headers=headers_user)

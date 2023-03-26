@@ -61,22 +61,48 @@ class TestBookService:
             book_service.filter_books(section='wrong_section')
 
     def test_create(self, author_1, book_service):
-        data = {
+        data_1 = {
             'title': 'Название',
             'author_id': 1,
         }
-        book_service.create(data)
-        book = book_service.get_one(1)
+        book_service.create(data_1)
+        book = book_service.get_all()[-1]
 
         assert book is not None, "Возвращается None вместо книги"
         assert type(book) is Book, f'Возвращается не книга, а {type(book)}'
-        assert book.title == data.get('title'), "title книг не совпадают"
-        assert book.author_id == data.get('author_id'), "author_id книг не совпадают"
+        assert book.title == data_1.get('title'), "title книг не совпадают"
+        assert book.author == author_1, "author книг не совпадают"
 
-        data['author_id'] = 2
+        data_2 = {
+            'title': 'Название',
+            'author_first_name': author_1.first_name,
+            'author_last_name': author_1.last_name
+        }
+        book_service.create(data_2)
+        book = book_service.get_all()[-1]
+
+        assert book is not None, "Возвращается None вместо книги"
+        assert type(book) is Book, f'Возвращается не книга, а {type(book)}'
+        assert book.title == data_2.get('title'), "title книг не совпадают"
+        assert book.author == author_1, "author книг не совпадают"
+
+        # Несуществующий автор
+        data_3 = {
+            'title': 'Название',
+            'author_id': 2,
+        }
 
         with pytest.raises(NotFound):
-            book_service.create(data)
+            book_service.create(data_3)
+
+        data_4 = {
+            'title': 'Название',
+            'author_first_name': 'Wrong_name',
+            'author_last_name': "Wrong_last_name"
+        }
+
+        with pytest.raises(NotFound):
+            book_service.create(data_4)
 
     def test_update(self, book_1, reader_1, author_1, book_service):
         data = {

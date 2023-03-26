@@ -21,9 +21,25 @@ class TestAuthorDAO:
         assert author.middle_name == author_1.middle_name, "middle_name автора не совпадают"
         assert author.last_name == author_1.last_name, "last_name автора не совпадают"
 
+        # Несуществующий автор
         author_2 = author_dao.get_one(2)
-
         assert author_2 is None, f'Возвращается {type(author_2)}, вместо None'
+
+    def test_get_by_name(self, author_1, author_dao):
+        author = author_dao.get_by_name(author_1.first_name, author_1.last_name)
+
+        assert author is not None, "Возвращается None вместо автора"
+        assert type(author) is Author, f'Возвращается не автор, а {type(author)}'
+        assert author.id == author_1.id, "id автора не совпадает"
+        assert author.first_name == author_1.first_name, "first_name автора не совпадают"
+        assert author.middle_name == author_1.middle_name, "middle_name автора не совпадают"
+        assert author.last_name == author_1.last_name, "last_name автора не совпадают"
+
+        # Несуществующий автор
+        author_2 = author_dao.get_by_name('Wrong_name', author_1.last_name)
+        assert author_2 is None, f'Возвращается {type(author_2)}, вместо None'
+        author_3 = author_dao.get_by_name(author_1.first_name, 'wrong_last_name')
+        assert author_3 is None, f'Возвращается {type(author_3)}, вместо None'
 
     def test_save(self, author_dao):
         new_author = Author(first_name='Имя', middle_name="Отчество", last_name="Фамилия")

@@ -25,6 +25,7 @@ books_give.add_argument(name='reader_id', type=int, location='json', required=Tr
 books_get_from_reader: RequestParser = RequestParser()
 books_get_from_reader.add_argument(name='book_id', type=int, location='json', required=True)
 
+
 # Author views
 author_post_put: RequestParser = RequestParser()
 author_post_put.add_argument(name='first_name', type=str, location='json', required=True)
@@ -36,6 +37,7 @@ author_patch.add_argument(name='first_name', type=str, location='json', required
 author_patch.add_argument(name='last_name', type=str, location='json', required=False)
 author_patch.add_argument(name='middle_name', type=str, location='json', required=False)
 
+
 # Reader views
 reader_put: RequestParser = RequestParser()
 reader_put.add_argument(name='first_name', type=str, location='json', required=True)
@@ -44,6 +46,7 @@ reader_put.add_argument(name='last_name', type=str, location='json', required=Tr
 reader_patch: RequestParser = RequestParser()
 reader_patch.add_argument(name='first_name', type=str, location='json', required=False)
 reader_patch.add_argument(name='last_name', type=str, location='json', required=False)
+
 
 # User views
 user_post_register: RequestParser = RequestParser()
@@ -57,9 +60,11 @@ user_post_password.add_argument(name='new_password', type=str, location='json', 
 user_put: RequestParser = RequestParser()
 user_put.add_argument(name='username', type=str, location='json', required=True)
 
+
 # News views
 news_parser: RequestParser = RequestParser()
 news_parser.add_argument(name='text', type=str, location='json', required=True)
+
 
 # Comment views
 comments_parser: RequestParser = RequestParser()

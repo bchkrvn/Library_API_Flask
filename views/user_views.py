@@ -35,8 +35,8 @@ class UsersViews(Resource):
 
         try:
             UserPutSchemasSchema().load(user_data)
-        except ValidationError as e:
-            abort(400, f'{e.messages}')
+        except ValidationError:
+            abort(400, f'Wrong data')
 
         user_data['id'] = u_id
         user_service.update(user_data)
@@ -79,8 +79,8 @@ class UserViews(Resource):
 
         try:
             UserPutSchemasSchema().load(user_data)
-        except ValidationError as e:
-            abort(400, f'{e.messages}')
+        except ValidationError:
+            abort(400, f'Wrong data')
 
         user_data['id'] = u_id
         user_service.update(user_data)
@@ -125,8 +125,8 @@ class UserRegisterView(Resource):
 
         try:
             UserRegisterSchema().load(data)
-        except ValidationError as e:
-            abort(400, f'{e.messages}')
+        except ValidationError:
+            abort(400, f'Wrong data')
 
         user_service.create(data)
         return '', 201
@@ -149,8 +149,8 @@ class UserPasswordView(Resource):
 
         try:
             UserChangePasswordSchema().load(passwords)
-        except ValidationError as e:
-            abort(400, f'{e.messages}')
+        except ValidationError:
+            abort(400, f'Wrong data')
 
         passwords['user_id'] = u_id
         user_service.change_password(passwords)

@@ -4,6 +4,8 @@ from marshmallow import ValidationError
 
 from api.parsers import auth_post, auth_put
 from container import auth_service
+from helpers.schemas.auth_schemas import AuthPostSchema, AuthPutSchema
+
 auth_ns = Namespace('auth', "Страница для авторизации пользователя")
 
 
@@ -16,16 +18,10 @@ class AuthsViews(Resource):
         """ Создание токена для пользователя """
         data: dict = request.json
 
-        if not data:
-            abort(400, "Data didn't send")
-        elif set(data.keys()) != {"username", "password"}:
-            abort(400, "Wrong keys")
-        elif None in data.values() or '' in data.values():
-            abort(400, "Wrong keys")
-        # try:
-        #     UserRegisterSchema().load(data)
-        # except ValidationError as e:
-        #     abort(400, f'{e.messages}')
+        try:
+            AuthPostSchema().load(data)
+        except ValidationError:
+            abort(400, f'Wrong data')
 
         username = data.get('username')
         password = data.get('password')
@@ -40,12 +36,10 @@ class AuthsViews(Resource):
         """ Обновление токена пользователя """
         data: dict = request.json
 
-        if not data:
-            abort(400, "Data didn't send")
-        elif {'refresh_token', } != set(data.keys()):
-            abort(400, 'Wrong keys')
-        elif data.get('refresh_token') in [None, '']:
-            abort(400, 'Wrong values')
+        try:
+            AuthPutSchema().load(data)
+        except ValidationError:
+            abort(400, 'Wrong data')
 
         refresh_token = data.get('refresh_token')
         tokens = auth_service.approve_refresh_token(refresh_token)

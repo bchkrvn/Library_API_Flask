@@ -1,5 +1,5 @@
 class TestAuthViewsExceptions:
-    def test_post_exceptions(self, client, user_1):
+    def test_post_exceptions(self, client, user_1, easy_password_1):
         # Пустой запрос
         response_1 = client.post('/auth/')
         assert response_1.status_code == 400, f'Статус код - {response_1.status_code} вместо 400'

@@ -1,10 +1,12 @@
 from flask_restx import Resource, Namespace
 from flask import request, abort
+from marshmallow import ValidationError
 
 from api.models import user
 from api.parsers import user_post_register, user_post_password, user_put
 from container import user_service
 from helpers.decorators import admin_required, user_required
+from helpers.schemas.user_schemas import UserRegisterSchema, UserPutSchemasSchema, UserChangePasswordSchema
 
 user_ns = Namespace('users', 'Страница для работы с пользователями')
 
@@ -31,12 +33,10 @@ class UsersViews(Resource):
         """
         user_data = request.json
 
-        if not user_data:
-            abort(400, "data didn't send")
-        elif {'username'} != set(user_data.keys()):
-            abort(400, 'wrong key')
-        elif user_data['username'] in [None, '']:
-            abort(400, "wrong value")
+        try:
+            UserPutSchemasSchema().load(user_data)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         user_data['id'] = u_id
         user_service.update(user_data)
@@ -77,12 +77,10 @@ class UserViews(Resource):
         """
         user_data = request.json
 
-        if not user_data:
-            abort(400, "data didn't send")
-        elif {'username'} != set(user_data.keys()):
-            abort(400, 'wrong key')
-        elif user_data['username'] in [None, '']:
-            abort(400, "wrong value")
+        try:
+            UserPutSchemasSchema().load(user_data)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         user_data['id'] = u_id
         user_service.update(user_data)
@@ -125,13 +123,10 @@ class UserRegisterView(Resource):
         """
         data = request.json
 
-        if not data:
-            abort(400, 'Data did not send')
-        elif set(data.keys()) != {'username', 'password'}:
-            abort(400, 'Wrong key')
-        values = data.values()
-        if None in values or '' in values:
-            abort(400, 'Wrong values')
+        try:
+            UserRegisterSchema().load(data)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         user_service.create(data)
         return '', 201
@@ -152,13 +147,10 @@ class UserPasswordView(Resource):
         """
         passwords = request.json
 
-        if not passwords:
-            abort(400, 'Data did not send')
-        elif not set(passwords.keys()) <= {'old_password', 'new_password'}:
-            abort(400, 'Wrong key')
-        values = passwords.values()
-        if None in values or '' in values:
-            abort(400, 'Wrong values')
+        try:
+            UserChangePasswordSchema().load(passwords)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         passwords['user_id'] = u_id
         user_service.change_password(passwords)

@@ -93,6 +93,14 @@ class TestUserViewsExceptions:
         response_5 = client.post(f'/users/register', json=data_5)
         assert response_5.status_code == 400, f'Возвращается код {response_5.status_code} вместо 400'
 
+        # Легкий пароль
+        data_6 = {
+            "username": 'new_user',
+            "password": "1234"
+        }
+        response_5 = client.post(f'/users/register', json=data_6)
+        assert response_5.status_code == 400, f'Возвращается код {response_5.status_code} вместо 400'
+
     def test_change_password_exceptions(self, client, user_1, headers_user):
         # Неавторизованный пользователь
         response_1 = client.post(f'/users/password')

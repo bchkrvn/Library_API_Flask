@@ -17,4 +17,4 @@ class UserDAO(BaseDAO):
         :param username: никнейм пользователя
         :return: User
         """
-        return self._session.query(self.__model__).filter(self.__model__.username == username).one()
+        return self._session.query(self.__model__).filter(self.__model__.username == username).first()

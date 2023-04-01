@@ -78,10 +78,10 @@ class TestUserViews:
         assert type(users[0]) is dict, f'В списке находятся {type(users[0])} вместо dict'
         assert user_keys == set(users[0].keys()), f'Ключи не совпадают'
 
-    def test_register(self, client, user_service, reader_service):
+    def test_register(self, client, user_service, reader_service, hard_password_1):
         data = {
             "username": "new_username",
-            "password": "1111"
+            "password": hard_password_1
         }
         response = client.post(f'/users/register', json=data)
         assert response.status_code == 201, f'Возвращается код {response.status_code} вместо 201'
@@ -99,11 +99,11 @@ class TestUserViews:
         assert reader.first_name is None, 'Имя читателя не None при создании пользователя'
         assert reader.last_name is None, 'Фамилия читателя не None при создании пользователя'
 
-    def test_change_password(self, client, user_1, headers_user, user_service):
+    def test_change_password(self, client, user_1, headers_user, user_service, hard_password_1):
         old_password = copy(user_1.password)
         data = {
-            'old_password': '1111',
-            'new_password': '2222'
+            'old_password': hard_password_1,
+            'new_password': hard_password_1 + hard_password_1
         }
         response = client.post(f'/users/password', json=data, headers=headers_user)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'

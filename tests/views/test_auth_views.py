@@ -1,8 +1,8 @@
 class TestAuthViews:
-    def test_post(self, client, user_1):
+    def test_post(self, client, user_1, hard_password_1):
         data = {
             "username": user_1.username,
-            "password": "1111"
+            "password": hard_password_1
         }
         response = client.post('/auth/', json=data)
         assert response.status_code == 200, f'Возвращается статус {response.status_code} вместо 200'
@@ -14,10 +14,10 @@ class TestAuthViews:
         assert 'refresh_token' in tokens, f'В токенах нет refresh_token'
         assert None not in tokens.values(), f'Вместо токенов возвращается None'
 
-    def test_put(self, client, user_1, headers_user):
+    def test_put(self, client, user_1, headers_user, hard_password_1):
         data = {
             "username": user_1.username,
-            "password": "1111"
+            "password": hard_password_1
         }
         response_post = client.post('/auth/', json=data)
         assert response_post.status_code == 200, f'Возвращается статус {response_post.status_code} вместо 200'

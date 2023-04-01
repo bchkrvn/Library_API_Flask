@@ -196,8 +196,18 @@ def reader_2(db):
 
 
 @pytest.fixture
-def user_1(db):
-    password = get_hash('1111')
+def hard_password_1():
+    return 'qWer5%ty'
+
+
+@pytest.fixture
+def easy_password_1():
+    return '1111'
+
+
+@pytest.fixture
+def user_1(db, hard_password_1):
+    password = get_hash(hard_password_1)
     u = User(
         username='name_1',
         password=password,
@@ -209,8 +219,8 @@ def user_1(db):
 
 
 @pytest.fixture
-def user_2(db):
-    password = get_hash('2222')
+def user_2(db, hard_password_1):
+    password = get_hash(hard_password_1)
     u = User(
         username='name_2',
         password=password,
@@ -222,8 +232,8 @@ def user_2(db):
 
 
 @pytest.fixture
-def admin(db):
-    password = get_hash('1111')
+def admin(db, hard_password_1):
+    password = get_hash(hard_password_1)
     a = User(
         username='admin',
         password=password,
@@ -289,8 +299,8 @@ def comment_2(db):
 
 
 @pytest.fixture
-def headers_user(user_1, auth_service):
-    tokens = auth_service.generate_token(user_1.username, '1111')
+def headers_user(user_1, auth_service, hard_password_1):
+    tokens = auth_service.generate_token(user_1.username, hard_password_1)
     access_token = tokens['access_token']
     headers = {
         'Authorization': f'Bearer {access_token}'}
@@ -298,8 +308,8 @@ def headers_user(user_1, auth_service):
 
 
 @pytest.fixture
-def headers_admin(admin, auth_service):
-    tokens = auth_service.generate_token(admin.username, '1111')
+def headers_admin(admin, auth_service, hard_password_1):
+    tokens = auth_service.generate_token(admin.username, hard_password_1)
     access_token = tokens['access_token']
     headers = {
         'Authorization': f'Bearer {access_token}'}

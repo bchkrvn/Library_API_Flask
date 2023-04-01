@@ -1,9 +1,9 @@
 from flask_restx import Resource, Namespace
 from flask import request, abort
+from marshmallow import ValidationError
 
 from api.parsers import auth_post, auth_put
 from container import auth_service
-
 auth_ns = Namespace('auth', "Страница для авторизации пользователя")
 
 
@@ -22,6 +22,10 @@ class AuthsViews(Resource):
             abort(400, "Wrong keys")
         elif None in data.values() or '' in data.values():
             abort(400, "Wrong keys")
+        # try:
+        #     UserRegisterSchema().load(data)
+        # except ValidationError as e:
+        #     abort(400, f'{e.messages}')
 
         username = data.get('username')
         password = data.get('password')

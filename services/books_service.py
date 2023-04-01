@@ -72,6 +72,7 @@ class BookService:
             first_name = data.pop('author_first_name')
             last_name = data.pop('author_last_name')
             author = self.author_service.get_by_name(first_name, last_name)
+
         data['author'] = author
         data['is_in_lib'] = True
         new_book = Book(**data)
@@ -85,14 +86,20 @@ class BookService:
         book = self.get_one(data.get('id'))
         book.title = data.get('title')
         is_in_lib = data.get('is_in_lib')
-        reader_id = data.get('reader_id')
+        reader_id = data.get('reader_id', None)
 
         if type(is_in_lib) is bool:
             book.is_in_lib = data.get('is_in_lib')
         else:
             abort(400, 'Wrong data')
 
-        book.author = self.author_service.get_one(data.get('author_id'))
+        if 'author_id' in data:
+            author_id = data.pop('author_id')
+            book.author = self.author_service.get_one(author_id)
+        else:
+            first_name = data.pop('author_first_name')
+            last_name = data.pop('author_last_name')
+            book.author = self.author_service.get_by_name(first_name, last_name)
 
         if is_in_lib:
             book.reader = None

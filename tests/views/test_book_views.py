@@ -13,7 +13,7 @@ class TestBookViews:
     def test_post_book(self, client, headers_admin, book_service, author_1):
         data_1 = {
             "title": "Название_1",
-            "author_id": 1
+            "author_id": author_1.id
         }
         response = client.post('/books/', json=data_1, headers=headers_admin)
         assert response.status_code == 201, f'Возвращается код {response.status_code} вместо 201'

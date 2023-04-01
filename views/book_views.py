@@ -1,10 +1,12 @@
 from flask_restx import Resource, Namespace
 from flask import request, abort
+from marshmallow import ValidationError
 
 from api.models import book
 from api.parsers import books_get, books_post, books_put, books_patch, books_give
 from container import books_service
 from helpers.decorators import admin_required, auth_required
+from helpers.schemas.books_shemas import BookSchema, BookPatchSchema, BookTransferSchema
 
 book_ns = Namespace('books', "Страница для работы с книгами")
 
@@ -34,13 +36,11 @@ class BooksViews(Resource):
         Страница для добавления новой книги, доступна администратору
         """
         data = request.json
-        if not data:
-            abort(400, "Data didn't send")
-        elif set(data.keys()) not in [{'title', 'author_id'}, {'title', 'author_first_name', 'author_last_name'}]:
-            abort(400, 'Wrong keys')
-        values = data.values()
-        if None in values or '' in values:
-            abort(400, "Values didn't send")
+
+        try:
+            BookSchema().load(data)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         books_service.create(data)
         return '', 201
@@ -72,13 +72,10 @@ class BookViews(Resource):
         """
         data = request.json
 
-        if not data:
-            abort(400, "Data didn't send")
-        elif set(data.keys()) != {'title', 'author_id', 'reader_id', 'is_in_lib'}:
-            abort(400, 'Wrong keys')
-        values_without_reader = [value for key, value in data.items() if key != 'reader_id']
-        if None in values_without_reader or '' in values_without_reader:
-            abort(400, "Values didn't send")
+        try:
+            BookSchema().load(data)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         data['id'] = id_
         books_service.update(data)
@@ -97,13 +94,10 @@ class BookViews(Resource):
         """
         data = request.json
 
-        if not data:
-            abort(400, "Data didn't send")
-        elif not set(data.keys()) <= {'title', 'author_id', 'reader_id', 'is_in_lib'}:
-            abort(400, 'Wrong keys')
-        values_without_reader = [value for key, value in data.items() if key != 'reader_id']
-        if None in values_without_reader or '' in values_without_reader:
-            abort(400, "Values didn't send")
+        try:
+            BookPatchSchema(partial=True).load(data)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         data['id'] = id_
         books_service.update_partial(data)
@@ -137,12 +131,10 @@ class BookGiveViews(Resource):
         """
         data = request.json
 
-        if not data:
-            abort(400, "Data didn't send")
-        elif {'reader_id', 'book_id'} != set(data.keys()):
-            abort(400, "Wrong keys")
-        elif any([type(item) is not int for item in data.values()]):
-            abort(400, "Values must be integer")
+        try:
+            BookTransferSchema().load(data)
+        except ValidationError as e:
+            abort(400, f'Wrong data')
 
         books_service.give_book_to_reader(data)
         return '', 204
@@ -163,12 +155,10 @@ class BookGetViews(Resource):
         """
         data = request.json
 
-        if not data:
-            abort(400, "Data didn't send")
-        elif {'book_id', } != set(data.keys()):
-            abort(400, "Wrong keys")
-        elif type(data['book_id']) is not int:
-            abort(400, "Values must be integer")
+        try:
+            BookTransferSchema().load(data, partial=("reader_id",))
+        except ValidationError as e:
+            abort(400, f'Wrong data')
 
         books_service.get_book_from_reader(data)
         return '', 204

@@ -81,7 +81,7 @@ class AuthorViews(Resource):
         data = request.json
 
         try:
-            AuthorPutSchema().load(data)
+            AuthorSchema(partial=True).load(data)
         except ValidationError:
             abort(400, 'Wrong data')
 

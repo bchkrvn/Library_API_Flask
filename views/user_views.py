@@ -6,7 +6,7 @@ from api.models import user
 from api.parsers import user_post_register, user_post_password, user_put
 from container import user_service
 from helpers.decorators import admin_required, user_required
-from helpers.schemas.user_schemas import UserRegisterSchema, UserPutSchemasSchema, UserChangePasswordSchema
+from helpers.schemas.user_schemas import UserSchema, UserPasswordSchema
 
 user_ns = Namespace('users', 'Страница для работы с пользователями')
 
@@ -34,7 +34,7 @@ class UsersViews(Resource):
         user_data = request.json
 
         try:
-            UserPutSchemasSchema().load(user_data)
+            UserSchema().load(user_data, partial=("password",))
         except ValidationError:
             abort(400, f'Wrong data')
 
@@ -78,7 +78,7 @@ class UserViews(Resource):
         user_data = request.json
 
         try:
-            UserPutSchemasSchema().load(user_data)
+            UserSchema().load(user_data, partial=("password",))
         except ValidationError:
             abort(400, f'Wrong data')
 
@@ -124,7 +124,7 @@ class UserRegisterView(Resource):
         data = request.json
 
         try:
-            UserRegisterSchema().load(data)
+            UserSchema().load(data)
         except ValidationError:
             abort(400, f'Wrong data')
 
@@ -148,7 +148,7 @@ class UserPasswordView(Resource):
         passwords = request.json
 
         try:
-            UserChangePasswordSchema().load(passwords)
+            UserPasswordSchema().load(passwords)
         except ValidationError:
             abort(400, f'Wrong data')
 

@@ -29,8 +29,8 @@ class TestGetGiveBookViewsExceptions:
         assert response_5.status_code == 400, f'Возвращается код {response_5.status_code} вместо 400'
 
         data_6 = {
-            'book_id': '1',
-            'reader_id': '2'
+            'book_id': 'k',
+            'reader_id': 'k'
         }
         response_6 = client.post(f'/books/give/', json=data_6, headers=headers_admin)
         assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'

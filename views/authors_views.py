@@ -1,10 +1,12 @@
 from flask_restx import Resource, Namespace
 from flask import request, abort
+from marshmallow import ValidationError
 
 from api.models import author
 from api.parsers import author_patch, author_post_put
 from container import author_service
 from helpers.decorators import admin_required, auth_required
+from helpers.schemas.authors_schemas import AuthorSchema, AuthorPutSchema
 
 author_ns = Namespace('authors', "Страница для работы с авторами")
 
@@ -28,13 +30,10 @@ class AuthorsViews(Resource):
         """Страница для добавления нового автора, доступна администратору"""
         data: dict = request.json
 
-        if not data:
-            abort(400, 'Data did not send')
-        elif {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
+        try:
+            AuthorSchema().load(data)
+        except ValidationError:
             abort(400, 'Wrong data')
-        values = data.values()
-        if None in values or '' in values:
-            abort(400, 'Wrong values')
 
         author_service.create(data)
         return '', 201
@@ -61,13 +60,10 @@ class AuthorViews(Resource):
         """Страница для изменения автора, доступна администратору"""
         data = request.json
 
-        if not data:
-            abort(400, 'Data did not send')
-        elif {'first_name', 'last_name', 'middle_name'} != set(data.keys()):
+        try:
+            AuthorSchema().load(data)
+        except ValidationError:
             abort(400, 'Wrong data')
-        values = data.values()
-        if None in values or '' in values:
-            abort(400, 'Wrong values')
 
         data['id'] = id_
         author_service.update(data)
@@ -84,13 +80,10 @@ class AuthorViews(Resource):
         """Страница для частичного изменения автора, доступна администратору"""
         data = request.json
 
-        if not data:
-            abort(400, 'Data did not send')
-        elif not set(data.keys()) <= {'first_name', 'last_name', 'middle_name'}:
-            abort(400, 'Wrong key')
-        values = data.values()
-        if None in values or '' in values:
-            abort(400, 'Wrong values')
+        try:
+            AuthorPutSchema().load(data)
+        except ValidationError:
+            abort(400, 'Wrong data')
 
         data['id'] = id_
         author_service.update_partial(data)

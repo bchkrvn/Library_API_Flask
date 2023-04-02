@@ -3,9 +3,9 @@ from werkzeug.exceptions import NotFound, BadRequest
 
 
 class TestAuthService:
-    def test_generate_token(self, user_1, auth_service):
+    def test_generate_token(self, user_1, auth_service, hard_password_1):
         username = user_1.username
-        password = '1111'
+        password = hard_password_1
 
         tokens = auth_service.generate_token(username, password)
 
@@ -21,9 +21,9 @@ class TestAuthService:
         with pytest.raises(NotFound):
             auth_service.generate_token('wrong_name', password)
 
-    def test_approve_refresh_token(self, user_1, auth_service):
+    def test_approve_refresh_token(self, user_1, auth_service, hard_password_1):
         username = user_1.username
-        password = '1111'
+        password = hard_password_1
         tokens = auth_service.generate_token(username, password)
 
         refresh_token = tokens.get('refresh_token')

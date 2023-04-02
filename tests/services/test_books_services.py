@@ -104,24 +104,24 @@ class TestBookService:
         with pytest.raises(NotFound):
             book_service.create(data_4)
 
-    def test_update(self, book_1, reader_1, author_1, book_service):
+    def test_update(self, book_2, reader_1, author_1, book_service):
         data = {
-            'id': 1,
+            'id': book_2.id,
             'title': 'Название_1',
-            'author_id': 1,
-            'reader_id': 1,
+            'author_id': author_1.id,
+            'reader_id': reader_1.id,
             'is_in_lib': False,
         }
         book_service.update(data)
-        book = book_service.get_one(book_1.id)
+        book = book_service.get_one(book_2.id)
 
         assert book is not None, "Возвращается None вместо книги"
         assert type(book) is Book, f'Возвращается не книга, а {type(book)}'
         assert book.id == data.get('id'), "id книги не совпадает"
         assert book.title == data.get('title'), "title книг не совпадают"
         assert book.is_in_lib == data.get('is_in_lib'), "is_in_lib книг не совпадают"
-        assert book.reader_id == data.get('reader_id'), "reader_id книг не совпадают"
-        assert book.author_id == data.get('author_id'), "author_id книг не совпадают"
+        assert book.reader_id == reader_1.id, "reader_id книг не совпадают"
+        assert book.author_id == author_1.id, "author_id книг не совпадают"
 
         data = {
             'id': 1,
@@ -131,7 +131,7 @@ class TestBookService:
             'is_in_lib': True,
         }
         book_service.update(data)
-        book = book_service.get_one(book_1.id)
+        book = book_service.get_one(book_2.id)
 
         assert book is not None, "Возвращается None вместо книги"
         assert type(book) is Book, f'Возвращается не книга, а {type(book)}'
@@ -139,7 +139,7 @@ class TestBookService:
         assert book.title == data.get('title'), "title книг не совпадают"
         assert book.is_in_lib == data.get('is_in_lib'), "is_in_lib книг не совпадают"
         assert book.reader_id is None, "reader_id книг не None"
-        assert book.author_id == data.get('author_id'), "author_id книг не совпадают"
+        assert book.author_id == author_1.id, "author_id книг не совпадают"
 
     def test_update_wrong(self, book_1, reader_1, author_1, book_service):
         # Несуществующая книга

@@ -4,7 +4,7 @@ class TestNewsViews:
         assert response.status_code == 200, f'Вернулся статус {response.status_code} вместо 200'
 
         news = response.json
-        news_keys = {"id", "user_id", "user", "text", "amount_comments", "date", "update_date"}
+        news_keys = {"id", "user", "text", "amount_comments", "date", "update_date", "comments"}
 
         assert news is not None, 'Возвращается None или пустой список'
         assert type(news) is list, f'Возвращается {type(news)} вместо list'
@@ -31,7 +31,7 @@ class TestNewsViews:
         assert response.status_code == 200, f'Вернулся статус {response.status_code} вместо 200'
 
         news = response.json
-        news_keys = {"id", "user_id", "text", "amount_comments", "date", "update_date", "comments"}
+        news_keys = {"id", "user", "text", "amount_comments", "date", "update_date", "comments"}
 
         assert news is not None, 'Возвращается None или пустой список'
         assert type(news) is dict, f'Возвращается {type(news)} вместо dict'

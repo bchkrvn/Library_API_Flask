@@ -51,9 +51,14 @@ class News(db.Model):
     update_date = db.Column(db.DateTime)
 
 
+class UserSchema(Schema):
+    id = fields.Int()
+    username = fields.Str()
+
+
 class NewsSchema(Schema):
     id = fields.Int(dump_only=True)
-    user_id = fields.Int()
+    user = fields.Nested(UserSchema)
     text = fields.Str()
     date = fields.DateTime()
     amount_comments = fields.Integer()
@@ -75,7 +80,7 @@ class Comment(db.Model):
 class CommentSchema(Schema):
     id = fields.Int(dump_only=True)
     news_id = fields.Int()
-    user_id = fields.Int()
+    user = fields.Nested(UserSchema)
     text = fields.Str()
     date = fields.DateTime()
     update_date = fields.DateTime()

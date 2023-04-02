@@ -109,16 +109,16 @@ class TestUserService:
         with pytest.raises(NotFound):
             user_service.delete(1)
 
-    def test_change_password(self, user_1, user_service):
+    def test_change_password(self, user_1, user_service, hard_password_1):
         data = {
             'user_id': user_1.id,
-            'old_password': '1111',
+            'old_password': hard_password_1,
             'new_password': '2222',
         }
         user_service.change_password(data)
         user = user_service.get_one(user_1.id)
 
-        assert not compare_password(user.password, '1111'), 'Пароль остался прежним'
+        assert not compare_password(user.password, hard_password_1), 'Пароль остался прежним'
         assert compare_password(user.password, '2222'), 'Пароль не обновился на новый'
 
         # Несуществующий пользователь

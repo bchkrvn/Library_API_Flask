@@ -4,7 +4,7 @@ class TestBookViews:
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         books = response.json
-        book_keys = {'id', 'title', 'is_in_lib', 'author_id', 'author', 'reader_id', 'reader'}
+        book_keys = {'id', 'title', 'is_in_lib', 'author', 'reader'}
         assert books is not None, 'Возвращается None или пустой список'
         assert type(books) is list, f'Возвращается {type(books)} вместо list'
         assert type(books[0]) is dict, f'В списке находятся {type(books[0])} вместо dict'
@@ -41,7 +41,7 @@ class TestBookViews:
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         book = response.json
-        book_keys = {'id', 'title', 'is_in_lib', 'author_id', 'author', 'reader_id', 'reader'}
+        book_keys = {'id', 'title', 'is_in_lib', 'author', 'reader'}
         assert book is not None, 'Возвращается None или пустой список'
         assert type(book) is dict, f'В списке находятся {type(book)} вместо dict'
         assert book_keys == set(book.keys()), f'Ключи не совпадают'

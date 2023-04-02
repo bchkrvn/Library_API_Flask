@@ -4,7 +4,7 @@ class TestReadersViews:
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         reader: dict = response.json
-        reader_keys = {'id', 'first_name', 'last_name', 'user_id', 'user'}
+        reader_keys = {'id', 'first_name', 'last_name', 'user'}
 
         assert reader is not None, 'Возвращается None или пустой список'
         assert type(reader) is dict, f'Возвращается {type(reader)} вместо dict'
@@ -41,7 +41,7 @@ class TestReadersViews:
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         reader = response.json
-        reader_keys = {'id', 'first_name', 'last_name', 'user_id', 'user'}
+        reader_keys = {'id', 'first_name', 'last_name', 'user'}
 
         assert reader is not None, 'Возвращается None или пустой список'
         assert type(reader) is dict, f'Возвращается {type(reader)} вместо dict'
@@ -78,7 +78,7 @@ class TestReadersViews:
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         readers: dict = response.json
-        reader_keys = {'id', 'first_name', 'last_name', 'user_id', 'user'}
+        reader_keys = {'id', 'first_name', 'last_name', 'user'}
 
         assert readers is not None, 'Возвращается None или пустой список'
         assert type(readers) is list, f'Возвращается {type(readers)} вместо list'

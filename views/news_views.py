@@ -75,12 +75,10 @@ class OneNewsViews(Resource):
         """Страница для публикации нового комментария"""
         data = request.json
 
-        if not data:
-            abort(400, "You didn't send data")
-        elif {'text', } != set(data.keys()):
-            abort(400, "Wrong keys")
-        elif data['text'] in [None, '']:
-            abort(400, "You didn't send text")
+        try:
+            NewsValidateSchema().load(data)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         data['news_id'] = n_id
         data['user_id'] = u_id
@@ -98,12 +96,10 @@ class OneNewsViews(Resource):
     def put(self, n_id, u_id):
         """ Страница для редактирования новости"""
         data = request.json
-        if not data:
-            abort(400, "You didn't send data")
-        elif {'text', } != set(data.keys()):
-            abort(400, "Wrong keys")
-        elif data['text'] in [None, '']:
-            abort(400, "You didn't send text")
+        try:
+            NewsValidateSchema().load(data)
+        except ValidationError as e:
+            abort(400, f'{e.messages}')
 
         data['n_id'] = n_id
         data['u_id'] = u_id

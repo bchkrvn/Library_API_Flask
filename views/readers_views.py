@@ -1,10 +1,12 @@
 from flask_restx import Namespace, Resource
 from flask import request, abort
+from marshmallow import ValidationError
 
 from api.models import reader
 from api.parsers import reader_put, reader_patch
 from container import reader_service
 from helpers.decorators import admin_required, user_required
+from helpers.schemas.readers_schemas import ReaderSchema
 
 reader_ns = Namespace('readers', "Страница для работы с читателями")
 
@@ -26,10 +28,10 @@ class ReadersViews(Resource):
         """Страница для редактирования информации о читателе"""
         data = request.json
 
-        if not data:
-            abort(400, "You didn't send data")
-        elif set(data.keys()) != {"first_name", "last_name"}:
-            abort(400, "Wrong keys")
+        try:
+            ReaderSchema().load(data)
+        except ValidationError:
+            abort(400, 'Wrong data')
 
         data['id'] = u_id
         reader_service.update(data)
@@ -43,10 +45,10 @@ class ReadersViews(Resource):
         """Страница для частичного редактирования информации о читателе, доступно пользователю"""
         data = request.json
 
-        if not data:
-            abort(400, "You didn't send data")
-        elif not set(data.keys()) <= {"first_name", "last_name"}:
-            abort(400, "Wrong keys")
+        try:
+            ReaderSchema(partial=True).load(data)
+        except ValidationError:
+            abort(400, 'Wrong data')
 
         data['id'] = u_id
         reader_service.update_partial(data)
@@ -74,10 +76,10 @@ class ReaderViews(Resource):
         """Страница для обновления информации о читателе, доступно администратору"""
 
         data = request.json
-        if not data:
-            abort(400, "You didn't send data")
-        elif set(data.keys()) != {"first_name", "last_name"}:
-            abort(400, "Wrong keys")
+        try:
+            ReaderSchema().load(data)
+        except ValidationError:
+            abort(400, 'Wrong data')
 
         data['id'] = u_id
         reader_service.update(data)
@@ -92,10 +94,10 @@ class ReaderViews(Resource):
         """Страница для частичного обновления информации о читателе, доступно администратору"""
 
         data = request.json
-        if not data:
-            abort(400, "You didn't send data")
-        elif not set(data.keys()) <= {"first_name", "last_name"}:
-            abort(400, "Wrong keys")
+        try:
+            ReaderSchema(partial=True).load(data)
+        except ValidationError:
+            abort(400, 'Wrong data')
 
         data['id'] = u_id
         reader_service.update_partial(data)
@@ -112,5 +114,4 @@ class ReadersViews(Resource):
     def get(self):
         """Страница для получения информации о всех читателях, доступно администратору"""
 
-        readers = reader_service.get_all()
-        return readers
+        return reader_service.get_all()

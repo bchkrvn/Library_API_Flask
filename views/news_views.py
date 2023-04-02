@@ -5,13 +5,12 @@ from marshmallow import ValidationError
 from api.models import news
 from api.parsers import news_parser
 from container import news_service, comment_service
-from dao.models.models_dao import NewsSchema, CommentSchema
+from dao.models.models_dao import NewsSchema
 from helpers.decorators import auth_required, user_required
+from helpers.schemas.comments_schema import CommentsSchema
 from helpers.schemas.news_schema import NewsValidateSchema
 
 news_ns = Namespace('news', 'Страница для получения новостей')
-# comments_schema = CommentSchema(many=True)
-
 
 @news_ns.route('/')
 class NewsViews(Resource):
@@ -41,8 +40,8 @@ class NewsViews(Resource):
 
         try:
             NewsValidateSchema().load(data)
-        except ValidationError as e:
-            abort(400, f'{e.messages}')
+        except ValidationError:
+            abort(400, f'Wrong data')
 
         data['user_id'] = u_id
         news_service.create(data)
@@ -76,9 +75,9 @@ class OneNewsViews(Resource):
         data = request.json
 
         try:
-            NewsValidateSchema().load(data)
-        except ValidationError as e:
-            abort(400, f'{e.messages}')
+            CommentsSchema().load(data)
+        except ValidationError:
+            abort(400, f'Wrong data')
 
         data['news_id'] = n_id
         data['user_id'] = u_id
@@ -98,8 +97,8 @@ class OneNewsViews(Resource):
         data = request.json
         try:
             NewsValidateSchema().load(data)
-        except ValidationError as e:
-            abort(400, f'{e.messages}')
+        except ValidationError:
+            abort(400, f'Wrong data')
 
         data['n_id'] = n_id
         data['u_id'] = u_id

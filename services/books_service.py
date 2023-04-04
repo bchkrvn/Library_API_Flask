@@ -34,7 +34,8 @@ class BookService:
             abort(404, f'book with id={id_} not found')
         return book
 
-    def filter_books(self, author_id=None, reader_id=None, section=None) -> list[Book]:
+    def filter_books(self, author_id: int or None = None, reader_id: int or None = None,
+                     section: str or None = None) -> list[Book]:
         """
         Получить отфильтрованный список книг.
         Отфильтровать можно по автору, читателю и наличию
@@ -60,7 +61,7 @@ class BookService:
 
         return self.dao.get_all(result)
 
-    def create(self, data: dict):
+    def create(self, data: dict[str, str or int]) -> None:
         """
         Добавить новую книгу
         :param data: данные о книге (название, автор)
@@ -78,7 +79,7 @@ class BookService:
         new_book = Book(**data)
         self.dao.save(new_book)
 
-    def update(self, data: dict):
+    def update(self, data: dict[str, str or int]) -> None:
         """
         Обновить информацию о книге
         :param data: информация для обновления (название, автор)
@@ -88,10 +89,11 @@ class BookService:
         is_in_lib = data.get('is_in_lib')
         reader_id = data.get('reader_id', None)
 
-        if type(is_in_lib) is bool:
-            book.is_in_lib = data.get('is_in_lib')
+        book.is_in_lib = data.get('is_in_lib')
+        if is_in_lib:
+            book.reader = None
         else:
-            abort(400, 'Wrong data')
+            book.reader = self.reader_service.get_one(reader_id)
 
         if 'author_id' in data:
             author_id = data.pop('author_id')
@@ -101,45 +103,35 @@ class BookService:
             last_name = data.pop('author_last_name')
             book.author = self.author_service.get_by_name(first_name, last_name)
 
-        if is_in_lib:
-            book.reader = None
-        elif reader_id:
-            book.reader = self.reader_service.get_one(data.get('reader_id'))
-        else:
-            abort(400, "Didn't send reader_id if not in lib")
-
         self.dao.save(book)
 
-    def update_partial(self, data: dict):
+    def update_partial(self, data: dict[str, str or int]) -> None:
         """
         Частично обновить информацию о книге
         :param data: информация для обновления (название, автор)
         """
         book = self.get_one(data.get('id'))
-        title = data.get('title', None)
-        if title:
-            book.title = title
 
-        author_id = data.get('author_id', None)
-        if author_id:
+        if 'title' in data:
+            book.title = data.get('title')
+
+        if 'author_id' in data:
+            author_id = data.pop('author_id')
             book.author = self.author_service.get_one(author_id)
+        elif 'author_first_name' in data and 'author_last_name' in data:
+            first_name = data.pop('author_first_name')
+            last_name = data.pop('author_last_name')
+            book.author = self.author_service.get_by_name(first_name, last_name)
 
         is_in_lib = data.get('is_in_lib', None)
         reader_id = data.get('reader_id', None)
 
-        if type(is_in_lib) is bool:
-
-            if is_in_lib:
-                book.is_in_lib = is_in_lib
-                book.reader_id = None
-            elif reader_id:
-                book.is_in_lib = is_in_lib
-                book.reader = self.reader_service.get_one(reader_id)
-            else:
-                abort(400, "Didn't send reader_id if not in lib")
-
-        elif is_in_lib is not None:
-            abort(400, 'is in lib must be bool')
+        if is_in_lib:
+            book.is_in_lib = is_in_lib
+            book.reader_id = None
+        elif reader_id:
+            book.is_in_lib = is_in_lib
+            book.reader = self.reader_service.get_one(reader_id)
 
         self.dao.save(book)
 

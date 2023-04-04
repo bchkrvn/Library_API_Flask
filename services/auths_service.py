@@ -17,7 +17,7 @@ class AuthService:
     def __init__(self, user_service: UserService):
         self.user_service = user_service
 
-    def generate_token(self, username: str, password: str or None, is_refresh=False) -> dict:
+    def generate_token(self, username: str, password: str or None, is_refresh: bool = False) -> dict[str, str]:
         """
         Генерация или обновление токена для пользователя.
         :param username: никнейм пользователя
@@ -51,17 +51,19 @@ class AuthService:
 
         return tokens
 
-    def approve_refresh_token(self, refresh_token: str) -> dict:
+    def approve_refresh_token(self, refresh_token: str) -> dict[str, str]:
         """
         Обновление токена пользователя на основе refresh_token
         :param refresh_token: refresh_token
         :return: access_token and refresh_token
         """
         try:
-            data = jwt.decode(refresh_token, current_app.config["JWT_SECRET"],
-                              algorithms=[current_app.config["JWT_ALGO"]])
+            data = jwt.decode(refresh_token,
+                              current_app.config["JWT_SECRET"],
+                              algorithms=[current_app.config["JWT_ALGO"]],
+                              )
             username = data.get('username')
         except Exception as e:
-            abort(400, 'wrong token')
+            abort(400, 'Wrong token')
 
         return self.generate_token(username, None, is_refresh=True)

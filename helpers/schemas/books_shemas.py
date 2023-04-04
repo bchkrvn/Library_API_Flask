@@ -42,6 +42,8 @@ class BookPatchSchema(Schema):
         if 'author_id' in data:
             pass
         elif 'author_first_name' in data and 'author_last_name' not in data:
+            pass
+        elif 'author_first_name' not in data and 'author_last_name' in data:
             raise ValidationError("Data must have author_id, or author_first_name and author_last_name keys")
 
 

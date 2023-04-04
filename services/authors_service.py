@@ -40,15 +40,15 @@ class AuthorService:
             abort(404, f'author "{first_name} {last_name}" not found')
         return author
 
-    def create(self, data: dict):
+    def create(self, data: dict) -> None:
         """
-        Дообавить нового автора в БД
+        Добавить нового автора в БД
         :param data: Данные, содержащие Имя, Фамилию и Отчество
         """
         new_author = Author(**data)
         self.dao.save(new_author)
 
-    def update(self, data: dict):
+    def update(self, data: dict) -> None:
         """
         Обновить данные у автора
         :param data: Данные, содержащие Имя, Фамилию и Отчество
@@ -60,7 +60,7 @@ class AuthorService:
         author.last_name = data.get('last_name')
         self.dao.save(author)
 
-    def update_partial(self, data: dict):
+    def update_partial(self, data: dict) -> None:
         """
         Частично обновить данные у автора
         :param data: Данные, которые могут содержать Имя, Фамилию и Отчество
@@ -74,7 +74,7 @@ class AuthorService:
             author.last_name = data.get('last_name')
         self.dao.save(author)
 
-    def delete(self, id_: int):
+    def delete(self, id_: int) -> None:
         """
         Удалить автора по его id
         :param id_: id автора

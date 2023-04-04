@@ -104,7 +104,7 @@ class TestBookService:
         with pytest.raises(NotFound):
             book_service.create(data_4)
 
-    def test_update(self, book_2, reader_1, author_1, book_service):
+    def test_update(self, book_2, reader_1, author_1, author_2, book_service):
         data = {
             'id': book_2.id,
             'title': 'Название_1',
@@ -124,11 +124,12 @@ class TestBookService:
         assert book.author_id == author_1.id, "author_id книг не совпадают"
 
         data = {
-            'id': 1,
-            'title': 'Название_1',
-            'author_id': 1,
-            'reader_id': 1,
-            'is_in_lib': True,
+            'id': book_2.id,
+            'title': 'Название_2',
+            'author_first_name': author_2.first_name,
+            'author_last_name': author_2.last_name,
+            'reader_id': reader_1.id,
+            'is_in_lib': True
         }
         book_service.update(data)
         book = book_service.get_one(book_2.id)
@@ -139,7 +140,7 @@ class TestBookService:
         assert book.title == data.get('title'), "title книг не совпадают"
         assert book.is_in_lib == data.get('is_in_lib'), "is_in_lib книг не совпадают"
         assert book.reader_id is None, "reader_id книг не None"
-        assert book.author_id == author_1.id, "author_id книг не совпадают"
+        assert book.author_id == author_2.id, "author_id книг не совпадают"
 
     def test_update_wrong(self, book_1, reader_1, author_1, book_service):
         # Несуществующая книга
@@ -178,24 +179,12 @@ class TestBookService:
         with pytest.raises(NotFound):
             book_service.update(data_3)
 
-        # is_in_lib не bool
-        data_2 = {
-            'id': book_1.id,
-            'title': 'Название_1',
-            'author_id': 2,
-            'reader_id': 1,
-            'is_in_lib': 'str',
-        }
-
-        with pytest.raises(BadRequest):
-            book_service.update(data_2)
-
-    def test_update_partial(self, book_1, reader_1, author_1, book_service):
+    def test_update_partial(self, book_1, reader_1, author_1, author_2, book_service):
         data = {
             'id': book_1.id,
             'title': 'Название_1',
-            'author_id': 1,
-            'reader_id': 1,
+            'author_id': author_1.id,
+            'reader_id': reader_1.id,
             'is_in_lib': False,
         }
         book_service.update_partial(data)
@@ -206,14 +195,15 @@ class TestBookService:
         assert book.id == data.get('id'), "id книги не совпадает"
         assert book.title == data.get('title'), "title книг не совпадают"
         assert book.is_in_lib == data.get('is_in_lib'), "is_in_lib книг не совпадают"
-        assert book.reader_id == data.get('reader_id'), "reader_id книг не совпадают"
-        assert book.author_id == data.get('author_id'), "author_id книг не совпадают"
+        assert book.reader == reader_1, "reader_id книг не совпадают"
+        assert book.author == author_1, "author_id книг не совпадают"
 
         data = {
             'id': book_1.id,
             'title': 'Название_1',
-            'author_id': 1,
-            'reader_id': 1,
+            'author_first_name': author_2.first_name,
+            'author_last_name': author_2.last_name,
+            'reader_id': reader_1.id,
             'is_in_lib': True,
         }
         book_service.update_partial(data)
@@ -225,7 +215,7 @@ class TestBookService:
         assert book.title == data.get('title'), "title книг не совпадают"
         assert book.is_in_lib == data.get('is_in_lib'), "is_in_lib книг не совпадают"
         assert book.reader_id is None, "reader_id книг не None"
-        assert book.author_id == data.get('author_id'), "author_id книг не совпадают"
+        assert book.author == author_2, "author_id книг не совпадают"
 
     def test_update_partial_wrong(self, book_1, reader_1, author_1, book_service):
         # Несуществующая книга
@@ -254,15 +244,6 @@ class TestBookService:
 
         with pytest.raises(NotFound):
             book_service.update_partial(data_3)
-
-        # is_in_lib не bool
-        data_4 = {
-            'id': book_1.id,
-            'is_in_lib': 'str',
-        }
-
-        with pytest.raises(BadRequest):
-            book_service.update_partial(data_4)
 
     def test_delete(self, book_1, book_service):
         book_service.delete(book_1.id)

@@ -38,16 +38,23 @@ class TestBookViewsExceptions:
             "author_first_name": 'Wrong_first_name',
             "author_last_name": 'Wrong_last_name'
         }
-        response_5 = client.post('/books/', json=data_6, headers=headers_admin)
-        assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
+        response_6 = client.post('/books/', json=data_6, headers=headers_admin)
+        assert response_6.status_code == 404, f'Возвращается код {response_6.status_code} вместо 404'
 
         # Пустые значения
         data_7 = {
-            "key_1": "",
-            "key_2": None
+            "title": "",
+            "author_id": ""
         }
-        response_6 = client.post('/books/', json=data_7, headers=headers_admin)
-        assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'
+        response_7 = client.post('/books/', json=data_7, headers=headers_admin)
+        assert response_7.status_code == 400, f'Возвращается код {response_7.status_code} вместо 400'
+
+        data_8 = {
+            "title": None,
+            "author_id": None
+        }
+        response_8 = client.post('/books/', json=data_8, headers=headers_admin)
+        assert response_8.status_code == 400, f'Возвращается код {response_8.status_code} вместо 400'
 
     def test_get_book_exceptions(self, client, book_1, headers_user):
         # Неавторизованный пользователь
@@ -89,35 +96,63 @@ class TestBookViewsExceptions:
         response_5 = client.put(f'/books/{book_1.id}', json=data_5, headers=headers_admin)
         assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
 
+        data_6 = {
+            "title": "Новое название",
+            "author_first_name": 'Wrong_first_name',
+            "author_last_name": 'Wrong_last_name',
+            "reader_id": reader_1.id,
+            "is_in_lib": False
+        }
+        response_6 = client.put(f'/books/{book_1.id}', json=data_6, headers=headers_admin)
+        assert response_6.status_code == 404, f'Возвращается код {response_6.status_code} вместо 404'
+
+        data_6 = {
+            "title": "Новое название",
+            "author_first_name": author_1.first_name,
+            "reader_id": reader_1.id,
+            "is_in_lib": False
+        }
+        response_6 = client.put(f'/books/{book_1.id}', json=data_6, headers=headers_admin)
+        assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 404'
+
         # Несуществующий читатель
-        data_5 = {
+        data_7 = {
             "title": "Новое название",
             "author_id": author_1.id,
             "reader_id": 999999,
             "is_in_lib": False
         }
-        response_5 = client.put(f'/books/{book_1.id}', json=data_5, headers=headers_admin)
-        assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
+        response_7 = client.put(f'/books/{book_1.id}', json=data_7, headers=headers_admin)
+        assert response_7.status_code == 404, f'Возвращается код {response_7.status_code} вместо 404'
 
         # Пустые значения
-        data_6 = {
-            "title": "",
+        data_8 = {
+            "title": None,
             "author_id": None,
             "reader_id": None,
             "is_in_lib": None
         }
-        response_6 = client.put(f'/books/{book_1.id}', json=data_6, headers=headers_admin)
-        assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'
+        response_8 = client.put(f'/books/{book_1.id}', json=data_8, headers=headers_admin)
+        assert response_8.status_code == 400, f'Возвращается код {response_8.status_code} вместо 400'
+
+        data_9 = {
+            "title": "",
+            "author_id": "",
+            "reader_id": "",
+            "is_in_lib": ""
+        }
+        response_9 = client.put(f'/books/{book_1.id}', json=data_9, headers=headers_admin)
+        assert response_9.status_code == 400, f'Возвращается код {response_9.status_code} вместо 400'
 
         # Не в библиотеке без читателя
-        data_6 = {
+        data_10 = {
             "title": "Название",
             "author_id": author_1.id,
             "reader_id": None,
             "is_in_lib": False
         }
-        response_6 = client.put(f'/books/{book_1.id}', json=data_6, headers=headers_admin)
-        assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'
+        response_10 = client.put(f'/books/{book_1.id}', json=data_10, headers=headers_admin)
+        assert response_10.status_code == 400, f'Возвращается код {response_10.status_code} вместо 400'
 
     def test_patch_exceptions(self, client, book_1, author_1, reader_1, headers_user, headers_admin):
         # Неавторизованный пользователь
@@ -148,31 +183,55 @@ class TestBookViewsExceptions:
         response_5 = client.patch(f'/books/{book_1.id}', json=data_5, headers=headers_admin)
         assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
 
+        data_6 = {
+            "title": "Новое название",
+            "author_first_name": 'Wrong_first_name',
+            "author_last_name": 'Wrong_last_name'
+        }
+        response_6 = client.patch(f'/books/{book_1.id}', json=data_6, headers=headers_admin)
+        assert response_6.status_code == 404, f'Возвращается код {response_6.status_code} вместо 404'
+
+        data_6 = {
+            "title": "Новое название",
+            "author_first_name": author_1.first_name,
+        }
+        response_6 = client.patch(f'/books/{book_1.id}', json=data_6, headers=headers_admin)
+        assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 404'
+
         # Несуществующий читатель
-        data_5 = {
+        data_7 = {
             "reader_id": 999999,
             "is_in_lib": False
         }
-        response_5 = client.patch(f'/books/{book_1.id}', json=data_5, headers=headers_admin)
-        assert response_5.status_code == 404, f'Возвращается код {response_5.status_code} вместо 404'
+        response_7 = client.patch(f'/books/{book_1.id}', json=data_7, headers=headers_admin)
+        assert response_7.status_code == 404, f'Возвращается код {response_7.status_code} вместо 404'
 
         # Пустые значения
-        data_6 = {
-            "title": "",
+        data_8 = {
+            "title": None,
             "author_id": None,
             "reader_id": None,
             "is_in_lib": None
         }
-        response_6 = client.patch(f'/books/{book_1.id}', json=data_6, headers=headers_admin)
-        assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'
+        response_8 = client.patch(f'/books/{book_1.id}', json=data_8, headers=headers_admin)
+        assert response_8.status_code == 400, f'Возвращается код {response_8.status_code} вместо 400'
+
+        data_9 = {
+            "title": "",
+            "author_id": "",
+            "reader_id": "",
+            "is_in_lib": ""
+        }
+        response_9 = client.patch(f'/books/{book_1.id}', json=data_9, headers=headers_admin)
+        assert response_9.status_code == 400, f'Возвращается код {response_9.status_code} вместо 400'
 
         # Не в библиотеке без читателя
-        data_6 = {
+        data_10 = {
             "reader_id": None,
             "is_in_lib": False
         }
-        response_6 = client.patch(f'/books/{book_1.id}', json=data_6, headers=headers_admin)
-        assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'
+        response_10 = client.patch(f'/books/{book_1.id}', json=data_10, headers=headers_admin)
+        assert response_10.status_code == 400, f'Возвращается код {response_10.status_code} вместо 400'
 
     def test_delete_exceptions(self, client, headers_user, headers_admin, book_1):
         # Неавторизованный пользователь

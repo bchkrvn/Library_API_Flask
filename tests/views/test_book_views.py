@@ -46,7 +46,7 @@ class TestBookViews:
         assert type(book) is dict, f'В списке находятся {type(book)} вместо dict'
         assert book_keys == set(book.keys()), f'Ключи не совпадают'
 
-    def test_put(self, client, book_1, author_2, reader_2, headers_admin, book_service):
+    def test_put(self, client, book_1, author_2, author_1, reader_2, headers_admin, book_service):
         data_1 = {
             "title": "Новое название",
             "author_id": author_2.id,
@@ -64,8 +64,9 @@ class TestBookViews:
         assert book.is_in_lib == data_1.get('is_in_lib'), 'Наличие книги не обновилось'
 
         data_2 = {
-            "title": "Новое название",
-            "author_id": author_2.id,
+            "title": "Новое название 2",
+            'author_first_name': author_1.first_name,
+            'author_last_name': author_1.last_name,
             "reader_id": reader_2.id,
             "is_in_lib": True
         }
@@ -75,11 +76,11 @@ class TestBookViews:
         book = book_service.get_one(book_1.id)
         assert book is not None, 'Вместо книги вернулся None'
         assert book.title == data_2.get('title'), 'Название книги не обновилось'
-        assert book.author_id == data_2.get('author_id'), 'Автор книги не обновился'
+        assert book.author == author_1, 'Автор книги не обновился'
         assert book.reader_id is None, 'Читатель книги не None'
         assert book.is_in_lib == data_2.get('is_in_lib'), 'Наличие книги не обновилось'
 
-    def test_patch(self, client, book_1, author_2, reader_2, headers_admin, book_service):
+    def test_patch(self, client, book_1, author_2, author_1, reader_2, headers_admin, book_service):
         data_1 = {
             "title": "Новое название",
             "author_id": author_2.id,
@@ -92,13 +93,14 @@ class TestBookViews:
         book = book_service.get_one(book_1.id)
         assert book is not None, 'Вместо книги вернулся None'
         assert book.title == data_1.get('title'), 'Название книги не обновилось'
-        assert book.author_id == data_1.get('author_id'), 'Автор книги не обновился'
-        assert book.reader_id == data_1.get('reader_id'), 'Читатель книги не обновился'
+        assert book.author == author_2, 'Автор книги не обновился'
+        assert book.reader == reader_2, 'Читатель книги не обновился'
         assert book.is_in_lib == data_1.get('is_in_lib'), 'Наличие книги не обновилось'
 
         data_2 = {
-            "title": "Новое название",
-            "author_id": author_2.id,
+            "title": "Новое название 2",
+            'author_first_name': author_1.first_name,
+            'author_last_name': author_1.last_name,
             "reader_id": reader_2.id,
             "is_in_lib": True
         }
@@ -108,7 +110,7 @@ class TestBookViews:
         book = book_service.get_one(book_1.id)
         assert book is not None, 'Вместо книги вернулся None'
         assert book.title == data_2.get('title'), 'Название книги не обновилось'
-        assert book.author_id == data_2.get('author_id'), 'Автор книги не обновился'
+        assert book.author == author_1, 'Автор книги не обновился'
         assert book.reader_id is None, 'Читатель книги не None'
         assert book.is_in_lib == data_2.get('is_in_lib'), 'Наличие книги не обновилось'
 

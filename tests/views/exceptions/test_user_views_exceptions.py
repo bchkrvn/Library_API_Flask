@@ -4,7 +4,7 @@ class TestUserViewsExceptions:
         response_1 = client.get('/users/')
         assert response_1.status_code == 401, f'Возвращается код {response_1.status_code} вместо 401'
 
-    def test_put_by_user_exceptions(self, client, user_1, headers_user):
+    def test_put_by_user_exceptions(self, client, user_1, user_2, headers_user):
         # Неавторизованный пользователь
         response_1 = client.put(f'/users/')
         assert response_1.status_code == 401, f'Возвращается код {response_1.status_code} вместо 401'
@@ -20,7 +20,14 @@ class TestUserViewsExceptions:
         response_3 = client.put('/users/', json=data_3, headers=headers_user)
         assert response_3.status_code == 400, f'Возвращается код {response_3.status_code} вместо 400'
 
-    def test_get_reader_by_admin_exceptions(self, client, headers_user, user_2):
+        # Username уже занят
+        data_4 = {
+            'username': user_2.username
+        }
+        response_4 = client.put('/users/', json=data_4, headers=headers_user)
+        assert response_4.status_code == 400, f'Возвращается код {response_4.status_code} вместо 400'
+
+    def test_get_user_by_admin_exceptions(self, client, headers_user, user_2):
         # Неавторизованный пользователь
         response_1 = client.get(f'/users/{user_2.id}')
         assert response_1.status_code == 401, f'Возвращается код {response_1.status_code} вместо 401'
@@ -29,7 +36,7 @@ class TestUserViewsExceptions:
         response_2 = client.get(f'/users/{user_2.id}', headers=headers_user)
         assert response_2.status_code == 403, f'Возвращается код {response_2.status_code} вместо 403'
 
-    def test_put_reader_by_admin_exceptions(self, client, headers_user, headers_admin, user_1):
+    def test_put_user_by_admin_exceptions(self, client, headers_user, headers_admin, user_1, user_2):
         # Неавторизованный пользователь
         response_1 = client.put(f'/users/{user_1.id}')
         assert response_1.status_code == 401, f'Возвращается код {response_1.status_code} вместо 401'
@@ -48,6 +55,13 @@ class TestUserViewsExceptions:
         }
         response_4 = client.put(f'/users/{user_1.id}', json=data_4, headers=headers_admin)
         assert response_4.status_code == 400, f'Возвращается код {response_4.status_code} вместо 400'
+
+        # Username уже занят
+        data_5 = {
+            'username': user_2.username
+        }
+        response_5 = client.put('/users/', json=data_5, headers=headers_admin)
+        assert response_5.status_code == 400, f'Возвращается код {response_5.status_code} вместо 400'
 
     def test_get_all_by_admin_exceptions(self, client, headers_user):
         # Неавторизованный пользователь
@@ -98,10 +112,10 @@ class TestUserViewsExceptions:
             "username": 'new_user',
             "password": "1234"
         }
-        response_5 = client.post(f'/users/register', json=data_6)
-        assert response_5.status_code == 400, f'Возвращается код {response_5.status_code} вместо 400'
+        response_6 = client.post(f'/users/register', json=data_6)
+        assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'
 
-    def test_change_password_exceptions(self, client, user_1, headers_user):
+    def test_change_password_exceptions(self, client, user_1, hard_password_1, headers_user):
         # Неавторизованный пользователь
         response_1 = client.post(f'/users/password')
         assert response_1.status_code == 401, f'Возвращается код {response_1.status_code} вместо 401'
@@ -139,3 +153,11 @@ class TestUserViewsExceptions:
         }
         response_6 = client.post(f'/users/password', json=data_6, headers=headers_user)
         assert response_6.status_code == 400, f'Возвращается код {response_6.status_code} вместо 400'
+
+        # Легкий пароль
+        data_7 = {
+            "username": hard_password_1,
+            "password": "1234"
+        }
+        response_7 = client.post(f'/users/register', json=data_7, headers=headers_user)
+        assert response_7.status_code == 400, f'Возвращается код {response_7.status_code} вместо 400'

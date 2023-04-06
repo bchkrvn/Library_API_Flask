@@ -3,7 +3,6 @@ import functools
 from flask import request, abort, current_app
 import jwt
 
-
 from container import user_service
 
 
@@ -11,6 +10,7 @@ def auth_required(func):
     """
     Проверка авторизован ли пользователь
     """
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:
@@ -32,6 +32,7 @@ def admin_required(func):
     """
     Проверка - является ли пользователь администратором
     """
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:
@@ -57,6 +58,7 @@ def user_required(func):
     """
     Проверка - кем является пользователь
     """
+
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if 'Authorization' not in request.headers:

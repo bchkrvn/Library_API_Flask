@@ -23,7 +23,7 @@ book_dao = BookDAO(db.session)
 books_service = BookService(book_dao, author_service, reader_service)
 
 user_dao = UserDAO(db.session)
-user_service = UserService(user_dao, reader_service)
+user_service = UserService(user_dao, reader_service, books_service)
 
 auth_service = AuthService(user_service)
 

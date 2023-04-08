@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from flask import abort
 from dao.models.models_dao import User
 from dao.users_dao import UserDAO
+from services.books_service import BookService
 from services.readers_service import ReaderService
 from tools.security import get_hash, compare_password
 
@@ -12,9 +13,10 @@ class UserService:
     Сервис для работы с пользователями
     """
 
-    def __init__(self, dao: UserDAO, reader_service: ReaderService):
+    def __init__(self, dao: UserDAO, reader_service: ReaderService, books_service: BookService):
         self.dao = dao
         self.reader_service = reader_service
+        self.books_service = books_service
 
     def get_all(self) -> list[User]:
         """
@@ -77,6 +79,10 @@ class UserService:
         :param id_: id пользователя
         """
         user = self.get_one(id_)
+        books = self.books_service.filter_books(reader_id=user.id)
+        if books:
+            return abort(400, 'Reader have books')
+
         self.dao.delete(user)
         self.reader_service.delete(id_)
 

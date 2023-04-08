@@ -99,8 +99,8 @@ def book_service(book_dao, author_service, reader_service):
 
 
 @pytest.fixture
-def user_service(user_dao, reader_service):
-    return UserService(user_dao, reader_service)
+def user_service(user_dao, reader_service, book_service):
+    return UserService(user_dao, reader_service, book_service)
 
 
 @pytest.fixture

@@ -161,3 +161,12 @@ class TestUserViewsExceptions:
         }
         response_7 = client.post(f'/users/register', json=data_7, headers=headers_user)
         assert response_7.status_code == 400, f'Возвращается код {response_7.status_code} вместо 400'
+
+    def test_delete_by_user_exceptions(self, client, user_1, user_2, book_2, headers_admin):
+        # Неавторизованный пользователь
+        response_1 = client.delete(f'/users/')
+        assert response_1.status_code == 401, f'Возвращается код {response_1.status_code} вместо 401'
+
+        # Сданы не все книги
+        response_2 = client.delete(f'/users/{user_2.id}', headers=headers_admin)
+        assert response_2.status_code == 400, f'Возвращается код {response_2.status_code} вместо 400'

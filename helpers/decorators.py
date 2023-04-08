@@ -1,7 +1,7 @@
 import functools
 
-from flask import request, abort, current_app
 import jwt
+from flask import request, abort, current_app
 
 from container import user_service
 

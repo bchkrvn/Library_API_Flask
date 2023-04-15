@@ -2,7 +2,7 @@ from flask import Flask
 
 from api.api import api
 from config import Config, config
-from setup_db import db
+from setup_db import db, migrate
 from views.auth_views import auth_ns
 from views.authors_views import author_ns
 from views.book_views import book_ns
@@ -22,6 +22,7 @@ def create_app(app_config: Config):
 def register_extensions(appliacation_: Flask):
     db.init_app(appliacation_)
     api.init_app(appliacation_)
+    migrate.init_app(appliacation_, db)
 
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
@@ -35,8 +36,8 @@ def register_extensions(appliacation_: Flask):
 app_conf = config
 app = create_app(app_conf)
 
-with app.app_context():
-    db.create_all()
+# with app.app_context():
+#     db.create_all()
 
 if __name__ == '__main__':
     app.run()

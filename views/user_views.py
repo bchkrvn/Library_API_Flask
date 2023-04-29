@@ -123,10 +123,10 @@ class UserRegisterView(Resource):
         """
         data = request.json
 
-        try:
-            UserSchema().load(data)
-        except ValidationError:
-            abort(400, f'Wrong data')
+        # try:
+        #     UserSchema().load(data)
+        # except ValidationError:
+        #     abort(400, f'Wrong data')
 
         user_service.create(data)
         return '', 201

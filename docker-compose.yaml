@@ -4,6 +4,11 @@ services:
   api:
     build:
       context: .
+    environment:
+      DB_USER: lib_4
+      DB_PASSWORD: lib_4
+      DB_NAME: lib_4
+      DB_HOST: pg
     ports:
       - 80:8000
     depends_on:

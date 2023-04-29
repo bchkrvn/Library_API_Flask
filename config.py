@@ -1,10 +1,8 @@
 import os
-import dotenv
 from typing import Type
 
 
 class Config(object):
-    DEBUG = True
     SECRET_HERE = '249y823r9v8238r9u'
     DB_USER = os.getenv('DB_USER')
     DB_PASSWORD = os.getenv('DB_PASSWORD')
@@ -31,11 +29,10 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     DEBUG = False
+    SQLALCHEMY_ECHO = False
 
 
 class ConfigFactory:
-
-    dotenv.load_dotenv(override=True)
     flask_env = os.getenv('FLASK_ENV')
 
     @classmethod

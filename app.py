@@ -32,12 +32,14 @@ def register_extensions(appliacation_: Flask):
     api.add_namespace(news_ns)
     api.add_namespace(comment_ns)
 
+    @appliacation_.route('/ping')
+    def ping_pong():
+        return 'pong'
+
 
 app_conf = config
 app = create_app(app_conf)
 
-# with app.app_context():
-#     db.create_all()
 
 if __name__ == '__main__':
     app.run()

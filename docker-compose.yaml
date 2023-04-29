@@ -4,10 +4,14 @@ services:
   api:
     build:
       context: .
+    environment:
+      FLASK_ENV: production
+      DB_HOST: pg
+      DB_USER: lib_4
+      DB_PASSWORD: lib_4
+      DB_NAME: lib_4
     ports:
       - 80:8000
-    volumes:
-      - ./docker_config.py:/code/config.py
     depends_on:
       pg:
         condition: service_healthy

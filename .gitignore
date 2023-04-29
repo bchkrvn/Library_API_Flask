@@ -5,3 +5,4 @@ env/
 .log
 test.db
 .env
+pg_data/

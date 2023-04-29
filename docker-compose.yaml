@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  api:
+    build:
+      context: .
+    ports:
+      - 80:8000
+    depends_on:
+      pg:
+        condition: service_healthy
+  pg:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: lib_4
+      POSTGRES_PASSWORD: lib_4
+      POSTGRES_DB: lib_4
+    ports:
+      - 5433:5432
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5

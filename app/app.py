@@ -1,15 +1,15 @@
 from flask import Flask
 
-from app.api import api
-from config import Config, config
-from setup_db import db, migrate
-from app.views.auth_views import auth_ns
-from app.views import author_ns
-from app.views.book_views import book_ns
-from app.views.comment_views import comment_ns
-from app.views.news_views import news_ns
-from app.views.readers_views import reader_ns
-from app.views import user_ns
+from .api.api import api
+from .config import Config, config
+from .setup_db import db, migrate
+from .views.auth_views import auth_ns
+from .views.authors_views import author_ns
+from .views.book_views import book_ns
+from .views.comment_views import comment_ns
+from .views.news_views import news_ns
+from .views.readers_views import reader_ns
+from .views.user_views import user_ns
 
 
 def create_app(app_config: Config):
@@ -19,10 +19,10 @@ def create_app(app_config: Config):
     return application
 
 
-def register_extensions(appliacation_: Flask):
-    db.init_app(appliacation_)
-    api.init_app(appliacation_)
-    migrate.init_app(appliacation_, db)
+def register_extensions(application: Flask):
+    db.init_app(application)
+    api.init_app(application)
+    migrate.init_app(application, db)
 
     api.add_namespace(user_ns)
     api.add_namespace(auth_ns)
@@ -32,14 +32,13 @@ def register_extensions(appliacation_: Flask):
     api.add_namespace(news_ns)
     api.add_namespace(comment_ns)
 
-    @appliacation_.route('/ping')
+    @application.route('/ping')
     def ping_pong():
         return 'pong'
 
 
 app_conf = config
 app = create_app(app_conf)
-
 
 if __name__ == '__main__':
     app.run()

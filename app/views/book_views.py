@@ -2,11 +2,11 @@ from flask_restx import Resource, Namespace
 from flask import request, abort
 from marshmallow import ValidationError
 
-from app.api.models import book
-from app.api.parsers import books_get, books_post, books_put, books_patch, books_give
-from app.container import books_service
-from app.helpers.decorators import admin_required, auth_required
-from app.helpers.schemas.books_shemas import BookSchema, BookPatchSchema, BookTransferSchema
+from ..api.models import book
+from ..api.parsers import books_get, books_post, books_put, books_patch, books_give
+from ..container import books_service
+from ..helpers.decorators import admin_required, auth_required
+from ..helpers.schemas.books_shemas import BookSchema, BookPatchSchema, BookTransferSchema
 
 book_ns = Namespace('books', "Страница для работы с книгами")
 

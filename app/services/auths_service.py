@@ -3,10 +3,10 @@ import datetime
 
 import jwt
 
-from app.services.users_service import UserService
+from ..services.users_service import UserService
 from flask import abort, current_app
 
-from app.tools.security import compare_password
+from ..tools.security import compare_password
 
 
 class AuthService:

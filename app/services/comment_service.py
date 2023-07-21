@@ -1,10 +1,10 @@
 import datetime
 from flask import abort
 
-from app.dao.comment_dao import CommentDAO
-from app.dao.models.models_dao import Comment
-from app.services.news_service import NewsService
-from app.services.users_service import UserService
+from ..dao.comment_dao import CommentDAO
+from ..dao.models.models_dao import Comment
+from ..services.news_service import NewsService
+from ..services.users_service import UserService
 
 
 class CommentService:

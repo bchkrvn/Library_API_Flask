@@ -2,11 +2,11 @@ from flask_restx import Namespace, Resource
 from flask import request, abort
 from marshmallow import ValidationError
 
-from app.api.models import reader
-from app.api.parsers import reader_put, reader_patch
-from app.container import reader_service
-from app.helpers.decorators import admin_required, user_required
-from app.helpers.schemas.readers_schemas import ReaderSchema
+from ..api.models import reader
+from ..api.parsers import reader_put, reader_patch
+from ..container import reader_service
+from ..helpers.decorators import admin_required, user_required
+from ..helpers.schemas.readers_schemas import ReaderSchema
 
 reader_ns = Namespace('readers', "Страница для работы с читателями")
 

@@ -2,10 +2,10 @@ from datetime import datetime
 
 import pytest as pytest
 
-from app import create_app
+from app.app import create_app
 from app.config import TestingConfig
 from app.dao.authors_dao import AuthorDAO
-from app.dao import BookDAO
+from app.dao.books_dao import BookDAO
 from app.dao.comment_dao import CommentDAO
 from app.dao.models.models_dao import Author, Book, Reader, User, News, Comment
 from app.dao.news_dao import NewsDAO
@@ -14,12 +14,12 @@ from app.dao.users_dao import UserDAO
 from app.services.authors_service import AuthorService
 from app.services.auths_service import AuthService
 from app.services.books_service import BookService
-from app.services import CommentService
+from app.services.comment_service import CommentService
 from app.services.news_service import NewsService
 from app.services.readers_service import ReaderService
 from app.services.users_service import UserService
 from app.setup_db import db as database
-from app.tools import get_hash
+from app.tools.security import get_hash
 
 
 @pytest.fixture

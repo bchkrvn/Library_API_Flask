@@ -15,9 +15,9 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    PWD_HASH_SALT = os.getenv('PWD_HASH_SALT')
-    PWD_HASH_ITERATIONS = os.getenv('PWD_HASH_ITERATIONS')
-    JWT_SECRET = os.getenv('JWT_SECRET')
+    PWD_HASH_SALT = bytes(os.getenv('PWD_HASH_SALT'), 'utf-8')
+    PWD_HASH_ITERATIONS = int(os.getenv('PWD_HASH_ITERATIONS'))
+    JWT_SECRET = bytes(os.getenv('JWT_SECRET'), 'utf-8')
     JWT_ALGO = os.getenv('JWT_ALGO')
     HASH_NAME = os.getenv('HASH_NAME')
 

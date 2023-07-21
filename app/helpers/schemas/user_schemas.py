@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields
 
-from app.helpers.schemas.tools import hard_password, not_empty_string
+from .tools import hard_password, not_empty_string
 
 
 class UserSchema(Schema):

@@ -1,4 +1,4 @@
-from dao.models.models_dao import Author
+from app.dao.models.models_dao import Author
 
 
 class TestAuthorDAO:

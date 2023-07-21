@@ -1,7 +1,7 @@
 import pytest
 from werkzeug.exceptions import BadRequest, NotFound
 
-from dao.models.models_dao import Book
+from app.dao.models.models_dao import Book
 
 
 class TestBookService:

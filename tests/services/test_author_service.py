@@ -1,7 +1,7 @@
 import pytest
 from werkzeug.exceptions import NotFound
 
-from dao.models.models_dao import Author
+from app.dao.models.models_dao import Author
 
 
 class TestAuthorService:

@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields
 
-from helpers.schemas.tools import not_empty_string
+from app.helpers.schemas.tools import not_empty_string
 
 
 class NewsValidateSchema(Schema):

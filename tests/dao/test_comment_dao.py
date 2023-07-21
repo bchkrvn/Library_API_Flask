@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from dao.models.models_dao import Comment
+from app.dao.models.models_dao import Comment
 
 
 class TestCommentDAO:

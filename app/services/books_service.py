@@ -1,9 +1,9 @@
-from dao.books_dao import BookDAO
+from app.dao.books_dao import BookDAO
 from flask import abort
 
-from dao.models.models_dao import Book
-from services.authors_service import AuthorService
-from services.readers_service import ReaderService
+from app.dao.models.models_dao import Book
+from app.services.authors_service import AuthorService
+from app.services.readers_service import ReaderService
 
 
 class BookService:

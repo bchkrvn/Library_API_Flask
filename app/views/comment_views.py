@@ -2,10 +2,10 @@ from flask_restx import Namespace, Resource
 from flask import request, abort
 from marshmallow import ValidationError
 
-from api.parsers import comments_parser
-from container import comment_service
-from helpers.decorators import user_required
-from helpers.schemas.comments_schema import CommentsSchema
+from app.api.parsers import comments_parser
+from app.container import comment_service
+from app.helpers.decorators import user_required
+from app.helpers.schemas.comments_schema import CommentsSchema
 
 comment_ns = Namespace('comments', 'Страница для работы с комментариями')
 

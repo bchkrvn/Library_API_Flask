@@ -1,5 +1,5 @@
-from dao.base_dao import BaseDAO
-from dao.models.models_dao import Book
+from app.dao.base_dao import BaseDAO
+from app.dao.models.models_dao import Book
 
 
 class BookDAO(BaseDAO):

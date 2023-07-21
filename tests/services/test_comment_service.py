@@ -1,9 +1,9 @@
 import time
 
 import pytest
-from werkzeug.exceptions import NotFound, BadRequest, Forbidden
+from werkzeug.exceptions import NotFound, Forbidden
 
-from dao.models.models_dao import Comment
+from app.dao.models.models_dao import Comment
 
 
 class TestCommentService:

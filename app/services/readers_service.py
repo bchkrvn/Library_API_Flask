@@ -1,5 +1,5 @@
-from dao.models.models_dao import Reader, User
-from dao.readers_dao import ReaderDAO
+from app.dao.models.models_dao import Reader, User
+from app.dao.readers_dao import ReaderDAO
 from flask import abort
 
 

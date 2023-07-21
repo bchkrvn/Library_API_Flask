@@ -1,5 +1,8 @@
 import os
 from typing import Type
+import dotenv
+
+dotenv.load_dotenv()
 
 
 class Config(object):
@@ -8,13 +11,15 @@ class Config(object):
     DB_PASSWORD = os.getenv('DB_PASSWORD')
     DB_NAME = os.getenv('DB_NAME')
     DB_HOST = os.getenv('DB_HOST')
-    SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}/{DB_NAME}"
+    DB_PORT = os.getenv('DB_PORT')
+    SQLALCHEMY_DATABASE_URI = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    PWD_HASH_SALT = b'secret here'
-    PWD_HASH_ITERATIONS = 100_000
-    JWT_SECRET = b'SeCR@t'
-    JWT_ALGO = 'HS256'
-    HASH_NAME = 'sha256'
+    PWD_HASH_SALT = os.getenv('PWD_HASH_SALT')
+    PWD_HASH_ITERATIONS = os.getenv('PWD_HASH_ITERATIONS')
+    JWT_SECRET = os.getenv('JWT_SECRET')
+    JWT_ALGO = os.getenv('JWT_ALGO')
+    HASH_NAME = os.getenv('HASH_NAME')
 
 
 class TestingConfig(Config):

@@ -1,9 +1,8 @@
 import pytest
-from sqlalchemy.exc import IntegrityError
 from werkzeug.exceptions import NotFound, BadRequest
 
-from dao.models.models_dao import User, Reader
-from tools.security import compare_password
+from app.dao.models.models_dao import User, Reader
+from app.tools import compare_password
 
 
 class TestUserService:

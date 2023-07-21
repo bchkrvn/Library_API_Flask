@@ -6,3 +6,5 @@ env/
 test.db
 .env
 pg_data/
+docker/docker.env
+.pytest_cache/

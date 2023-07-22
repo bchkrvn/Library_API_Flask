@@ -1,6 +1,7 @@
 alembic==1.10.4
 aniso8601==9.0.1
 attrs==21.2.0
+cachelib==0.10.2
 cffi==1.15.1
 click==8.0.3
 colorama==0.4.6
@@ -9,6 +10,7 @@ exceptiongroup==1.1.0
 Flask==2.0.2
 Flask-Migrate==4.0.4
 flask-restx==0.5.1
+Flask-Session==0.4.0
 Flask-SQLAlchemy==2.5.1
 greenlet==1.1.2
 importlib-metadata==4.8.1

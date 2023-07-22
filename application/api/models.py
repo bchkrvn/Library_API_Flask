@@ -1,6 +1,6 @@
 from flask_restx import fields, Model
 
-from app.api.api import api
+from application.api.api import api
 
 author: Model = api.model('Автор', {
     'id': fields.Integer(required=True, example=1),

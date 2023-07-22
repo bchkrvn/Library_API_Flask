@@ -1,8 +1,8 @@
 import pytest
 from werkzeug.exceptions import NotFound, BadRequest
 
-from app.dao.models.models_dao import User, Reader
-from app.tools.security import compare_password
+from application.dao.models.models_dao import User, Reader
+from application.tools.security import compare_password
 
 
 class TestUserService:

@@ -1,6 +1,6 @@
 from copy import copy
 
-from app.tools.security import compare_password
+from application.tools.security import compare_password
 
 
 class TestUserViews:

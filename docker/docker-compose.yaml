@@ -1,0 +1,38 @@
+version: "3.10"
+
+services:
+  lib_api:
+    build: ../application/.
+    env_file: docker.env
+    ports:
+      - 80:80
+    depends_on:
+      pg:
+        condition: service_healthy
+      lib_migrations:
+        condition: service_completed_successfully
+    volumes:
+      - ../application:/code/
+
+  lib_migrations:
+    build: ../application/.
+    env_file: docker.env
+#    command: python -m flask run --help
+    command: flask --help
+#    command: ls
+    depends_on:
+      pg:
+        condition: service_healthy
+
+  pg:
+    image: postgres:latest
+    env_file: docker.env
+    ports:
+      - 5432:5432
+    volumes:
+      - ../pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5

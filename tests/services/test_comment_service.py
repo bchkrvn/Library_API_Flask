@@ -3,7 +3,7 @@ import time
 import pytest
 from werkzeug.exceptions import NotFound, Forbidden
 
-from application.dao.models.models_dao import Comment
+from dao.models.models_dao import Comment
 
 
 class TestCommentService:

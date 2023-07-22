@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from application.dao.models.models_dao import News
+from dao.models.models_dao import News
 
 
 class TestNewsDAO:

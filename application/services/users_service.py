@@ -1,11 +1,11 @@
 from sqlalchemy.exc import IntegrityError
 
 from flask import abort
-from ..dao.models.models_dao import User
-from ..dao.users_dao import UserDAO
-from ..services.books_service import BookService
-from ..services.readers_service import ReaderService
-from ..tools.security import get_hash, compare_password
+from dao.models.models_dao import User
+from dao.users_dao import UserDAO
+from services.books_service import BookService
+from services.readers_service import ReaderService
+from tools.security import get_hash, compare_password
 
 
 class UserService:

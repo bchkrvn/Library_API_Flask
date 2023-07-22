@@ -1,4 +1,4 @@
-from application.dao.models.models_dao import Book
+from dao.models.models_dao import Book
 
 
 class TestBookDAO:

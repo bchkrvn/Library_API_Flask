@@ -2,11 +2,11 @@ from flask_restx import Resource, Namespace
 from flask import request, abort
 from marshmallow import ValidationError
 
-from ..api.models import user
-from ..api.parsers import user_post_register, user_post_password, user_put
-from ..container import user_service
-from ..helpers.decorators import admin_required, user_required
-from ..helpers.schemas.user_schemas import UserSchema, UserPasswordSchema
+from api.models import user
+from api.parsers import user_post_register, user_post_password, user_put
+from container import user_service
+from helpers.decorators import admin_required, user_required
+from helpers.schemas.user_schemas import UserSchema, UserPasswordSchema
 
 user_ns = Namespace('users', 'Страница для работы с пользователями')
 

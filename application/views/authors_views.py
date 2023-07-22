@@ -2,11 +2,11 @@ from flask_restx import Resource, Namespace
 from flask import request, abort
 from marshmallow import ValidationError
 
-from ..api.models import author
-from ..api.parsers import author_patch, author_post_put
-from ..container import author_service
-from ..helpers.decorators import admin_required, auth_required
-from ..helpers.schemas.authors_schemas import AuthorSchema
+from api.models import author
+from api.parsers import author_patch, author_post_put
+from container import author_service
+from helpers.decorators import admin_required, auth_required
+from helpers.schemas.authors_schemas import AuthorSchema
 
 author_ns = Namespace('authors', "Страница для работы с авторами")
 

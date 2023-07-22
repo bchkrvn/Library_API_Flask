@@ -1,5 +1,5 @@
-from application.dao.models.models_dao import User
-from application.tools.security import get_hash
+from dao.models.models_dao import User
+from tools.security import get_hash
 
 
 class TestUserDAO:

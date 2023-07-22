@@ -2,13 +2,13 @@ from flask_restx import Namespace, Resource
 from flask import request, abort
 from marshmallow import ValidationError
 
-from ..api.models import news
-from ..api.parsers import news_parser
-from ..container import news_service, comment_service
-from ..dao.models.models_dao import NewsSchema
-from ..helpers.decorators import auth_required, user_required
-from ..helpers.schemas.comments_schema import CommentsSchema
-from ..helpers.schemas.news_schema import NewsValidateSchema
+from api.models import news
+from api.parsers import news_parser
+from container import news_service, comment_service
+from dao.models.models_dao import NewsSchema
+from helpers.decorators import auth_required, user_required
+from helpers.schemas.comments_schema import CommentsSchema
+from helpers.schemas.news_schema import NewsValidateSchema
 
 news_ns = Namespace('news', 'Страница для получения новостей')
 

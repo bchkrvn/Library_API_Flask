@@ -17,9 +17,7 @@ services:
   lib_migrations:
     build: ../application/.
     env_file: docker.env
-#    command: python -m flask run --help
-    command: flask --help
-#    command: ls
+    command: python -m flask db upgrade
     depends_on:
       pg:
         condition: service_healthy

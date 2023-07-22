@@ -1,6 +1,6 @@
 from flask import abort
-from ..dao.authors_dao import AuthorDAO
-from ..dao.models.models_dao import Author
+from dao.authors_dao import AuthorDAO
+from dao.models.models_dao import Author
 
 
 class AuthorService:

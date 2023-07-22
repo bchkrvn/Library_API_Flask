@@ -2,24 +2,24 @@ from datetime import datetime
 
 import pytest as pytest
 
-from application.run import create_app
-from application.config import TestingConfig
-from application.dao.authors_dao import AuthorDAO
-from application.dao.books_dao import BookDAO
-from application.dao.comment_dao import CommentDAO
-from application.dao.models.models_dao import Author, Book, Reader, User, News, Comment
-from application.dao.news_dao import NewsDAO
-from application.dao.readers_dao import ReaderDAO
-from application.dao.users_dao import UserDAO
-from application.services.authors_service import AuthorService
-from application.services.auths_service import AuthService
-from application.services.books_service import BookService
-from application.services.comment_service import CommentService
-from application.services.news_service import NewsService
-from application.services.readers_service import ReaderService
-from application.services.users_service import UserService
-from application.setup_db import db as database
-from application.tools.security import get_hash
+from app import create_app
+from config import TestingConfig
+from dao.authors_dao import AuthorDAO
+from dao.books_dao import BookDAO
+from dao.comment_dao import CommentDAO
+from dao.models.models_dao import Author, Book, Reader, User, News, Comment
+from dao.news_dao import NewsDAO
+from dao.readers_dao import ReaderDAO
+from dao.users_dao import UserDAO
+from services.authors_service import AuthorService
+from services.auths_service import AuthService
+from services.books_service import BookService
+from services.comment_service import CommentService
+from services.news_service import NewsService
+from services.readers_service import ReaderService
+from services.users_service import UserService
+from setup_db import db as database
+from tools.security import get_hash
 
 
 @pytest.fixture

@@ -3,7 +3,7 @@ import functools
 import jwt
 from flask import request, abort, current_app
 
-from ..container import user_service
+from container import user_service
 
 
 def auth_required(func):

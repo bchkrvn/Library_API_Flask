@@ -1,5 +1,5 @@
-from application.dao.base_dao import BaseDAO
-from application.dao.models.models_dao import Comment
+from dao.base_dao import BaseDAO
+from dao.models.models_dao import Comment
 
 
 class CommentDAO(BaseDAO):

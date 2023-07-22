@@ -2,9 +2,9 @@ from flask_restx import Resource, Namespace
 from flask import request, abort
 from marshmallow import ValidationError
 
-from ..api.parsers import auth_post, auth_put
-from ..container import auth_service
-from ..helpers.schemas.auth_schemas import AuthPostSchema, AuthPutSchema
+from api.parsers import auth_post, auth_put
+from container import auth_service
+from helpers.schemas.auth_schemas import AuthPostSchema, AuthPutSchema
 
 auth_ns = Namespace('auth', "Страница для авторизации пользователя")
 

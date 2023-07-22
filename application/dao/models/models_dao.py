@@ -1,6 +1,6 @@
 from sqlalchemy.orm import relationship
 
-from application.setup_db import db
+from setup_db import db
 from marshmallow import Schema, fields
 
 

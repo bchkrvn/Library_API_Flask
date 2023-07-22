@@ -1,15 +1,15 @@
 from flask import Flask
 
-from .api.api import api
-from .config import Config, config
-from .setup_db import db, migrate
-from .views.auth_views import auth_ns
-from .views.authors_views import author_ns
-from .views.book_views import book_ns
-from .views.comment_views import comment_ns
-from .views.news_views import news_ns
-from .views.readers_views import reader_ns
-from .views.user_views import user_ns
+from api.api import api
+from config import Config, config
+from setup_db import db, migrate
+from views.auth_views import auth_ns
+from views.authors_views import author_ns
+from views.book_views import book_ns
+from views.comment_views import comment_ns
+from views.news_views import news_ns
+from views.readers_views import reader_ns
+from views.user_views import user_ns
 
 
 def create_app(app_config: Config):

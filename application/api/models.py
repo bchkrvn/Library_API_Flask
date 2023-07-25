@@ -32,7 +32,6 @@ book: Model = api.model('Книга', {
 comment: Model = api.model('Комментарий', {
     'id': fields.Integer(required=True, example=1),
     'news_id': fields.Integer(required=True, example=1),
-    # 'user_id': fields.Integer(required=True, example=2),
     'user': fields.Nested(user),
     'text': fields.String(required=True, example='Текст комментария'),
     'date': fields.DateTime(required=True, example='2000-01-01 00:00:00.000000'),
@@ -41,7 +40,6 @@ comment: Model = api.model('Комментарий', {
 
 news: Model = api.model('Новость', {
     'id': fields.Integer(required=True, example=1),
-    # 'user_id': fields.String(required=True, example=1),
     'user': fields.Nested(user),
     'text': fields.String(required=True, max_length=255, example='Текст новости'),
     'amount_comments': fields.Integer(required=True, example=1),

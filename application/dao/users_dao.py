@@ -8,9 +8,6 @@ class UserDAO(BaseDAO):
     """
     __model__ = User
 
-    def __init__(self, session):
-        super().__init__(session=session)
-
     def get_by_name(self, username: str) -> User:
         """
         Получить пользователя из БД по его никнейму

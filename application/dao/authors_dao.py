@@ -8,9 +8,6 @@ class AuthorDAO(BaseDAO):
     """
     __model__ = Author
 
-    def __init__(self, session):
-        super().__init__(session=session)
-
     def get_by_name(self, first_name: str, last_name: str) -> list[Author]:
         """
         Получить авторов из БД по имени и фамилии

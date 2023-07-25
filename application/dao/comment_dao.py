@@ -8,9 +8,6 @@ class CommentDAO(BaseDAO):
     """
     __model__ = Comment
 
-    def __init__(self, session):
-        super().__init__(session=session)
-
     def get_by_news_id(self, n_id: int) -> list[Comment]:
         """
         Получить комментарии по id новости из БД

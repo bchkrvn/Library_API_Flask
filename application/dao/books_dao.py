@@ -8,9 +8,6 @@ class BookDAO(BaseDAO):
     """
     __model__ = Book
 
-    def __init__(self, session):
-        super().__init__(session=session)
-
     def get_all(self, result=None) -> list[Book]:
         """
         Получить все книги из БД сразу или после фильтрации

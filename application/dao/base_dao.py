@@ -1,10 +1,13 @@
+from setup_db import db
+
+
 class BaseDAO:
     """
     Базовый класс DAO
     """
     __model__ = None
 
-    def __init__(self, session):
+    def __init__(self, session: db.session):
         self._session = session
 
     def get_all(self) -> list[object]:

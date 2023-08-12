@@ -24,7 +24,7 @@ services:
         condition: service_healthy
 
   pg:
-    image: postgres:latest
+    image: postgres:14.9
     env_file: docker.env
     ports:
       - 5432:5432

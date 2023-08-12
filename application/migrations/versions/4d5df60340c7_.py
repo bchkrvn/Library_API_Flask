@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8ae28c88fc8f
+Revision ID: 4d5df60340c7
 Revises: 
-Create Date: 2023-07-21 23:01:30.420428
+Create Date: 2023-08-12 20:45:36.404323
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8ae28c88fc8f'
+revision = '4d5df60340c7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -47,7 +47,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(), nullable=True),
     sa.Column('last_name', sa.String(), nullable=True),
-    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
@@ -55,7 +55,7 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('title', sa.String(), nullable=False),
     sa.Column('is_in_lib', sa.Boolean(), nullable=False),
-    sa.Column('author_id', sa.Integer(), nullable=False),
+    sa.Column('author_id', sa.Integer(), nullable=True),
     sa.Column('reader_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['author_id'], ['author.id'], ),
     sa.ForeignKeyConstraint(['reader_id'], ['reader.id'], ),
@@ -63,7 +63,7 @@ def upgrade():
     )
     op.create_table('comment',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('news_id', sa.Integer(), nullable=False),
+    sa.Column('news_id', sa.Integer(), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.Column('text', sa.String(), nullable=False),
     sa.Column('date', sa.DateTime(), nullable=False),

@@ -6,7 +6,7 @@ author: Model = api.model('Автор', {
     'id': fields.Integer(required=True, example=1),
     'first_name': fields.String(required=True, example='Иван'),
     'middle_name': fields.String(required=True, example='Иванович'),
-    'last_name': fields.String(required=True, example='Иванов')
+    'last_name': fields.String(required=True, example='Иванов'),
 })
 
 user: Model = api.model('Пользователь', {

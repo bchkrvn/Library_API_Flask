@@ -10,7 +10,7 @@ from helpers.schemas.comments_schema import CommentsSchema
 comment_ns = Namespace('comments', 'Страница для работы с комментариями')
 
 
-@comment_ns.route('/<int:c_id>')
+@comment_ns.route('/<int:c_id>/')
 class CommentView(Resource):
     @comment_ns.expect(comments_parser)
     @comment_ns.response(204, 'NoContent')

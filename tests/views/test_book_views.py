@@ -37,7 +37,7 @@ class TestBookViews:
         assert book.author == author_1, 'Неверный автор книги'
 
     def test_get_book(self, client, book_1, headers_user):
-        response = client.get(f'/books/{book_1.id}', headers=headers_user)
+        response = client.get(f'/books/{book_1.id}/', headers=headers_user)
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         book = response.json
@@ -53,7 +53,7 @@ class TestBookViews:
             "reader_id": reader_2.id,
             "is_in_lib": False
         }
-        response_1 = client.put(f'/books/{book_1.id}', json=data_1, headers=headers_admin)
+        response_1 = client.put(f'/books/{book_1.id}/', json=data_1, headers=headers_admin)
         assert response_1.status_code == 204, f'Возвращается код {response_1.status_code} вместо 204'
 
         book = book_service.get_one(book_1.id)
@@ -70,7 +70,7 @@ class TestBookViews:
             "reader_id": reader_2.id,
             "is_in_lib": True
         }
-        response_2 = client.put(f'/books/{book_1.id}', json=data_2, headers=headers_admin)
+        response_2 = client.put(f'/books/{book_1.id}/', json=data_2, headers=headers_admin)
         assert response_2.status_code == 204, f'Возвращается код {response_2.status_code} вместо 204'
 
         book = book_service.get_one(book_1.id)
@@ -87,7 +87,7 @@ class TestBookViews:
             "reader_id": reader_2.id,
             "is_in_lib": False
         }
-        response_1 = client.patch(f'/books/{book_1.id}', json=data_1, headers=headers_admin)
+        response_1 = client.patch(f'/books/{book_1.id}/', json=data_1, headers=headers_admin)
         assert response_1.status_code == 204, f'Возвращается код {response_1.status_code} вместо 204'
 
         book = book_service.get_one(book_1.id)
@@ -104,7 +104,7 @@ class TestBookViews:
             "reader_id": reader_2.id,
             "is_in_lib": True
         }
-        response_2 = client.patch(f'/books/{book_1.id}', json=data_2, headers=headers_admin)
+        response_2 = client.patch(f'/books/{book_1.id}/', json=data_2, headers=headers_admin)
         assert response_2.status_code == 204, f'Возвращается код {response_2.status_code} вместо 204'
 
         book = book_service.get_one(book_1.id)
@@ -115,7 +115,7 @@ class TestBookViews:
         assert book.is_in_lib == data_2.get('is_in_lib'), 'Наличие книги не обновилось'
 
     def test_delete(self, client, book_1, book_2, headers_admin, book_service):
-        response = client.delete(f'/books/{book_1.id}', headers=headers_admin)
+        response = client.delete(f'/books/{book_1.id}/', headers=headers_admin)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
 
         books = book_service.get_all()

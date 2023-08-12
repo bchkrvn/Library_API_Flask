@@ -10,7 +10,7 @@ services:
     depends_on:
       pg:
         condition: service_healthy
-      lib_migrations:
+      migrations:
         condition: service_completed_successfully
     volumes:
       - ../application:/code/

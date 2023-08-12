@@ -37,7 +37,7 @@ class TestReadersViews:
         assert reader.last_name == data.get('last_name'), 'Неверно установлено фамилия читателя'
 
     def test_get_reader_by_admin(self, client, headers_admin, reader_2):
-        response = client.get(f'/readers/{reader_2.id}', headers=headers_admin)
+        response = client.get(f'/readers/{reader_2.id}/', headers=headers_admin)
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         reader = response.json
@@ -52,7 +52,7 @@ class TestReadersViews:
             "first_name": "Имя_новое",
             "last_name": "Фамилия_новая"
         }
-        response = client.put(f'/readers/{reader_2.id}', json=data, headers=headers_admin)
+        response = client.put(f'/readers/{reader_2.id}/', json=data, headers=headers_admin)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
 
         reader = reader_service.get_one(reader_2.id)
@@ -65,7 +65,7 @@ class TestReadersViews:
             "first_name": "Имя_новое",
             "last_name": "Фамилия_новая"
         }
-        response = client.patch(f'/readers/{reader_2.id}', json=data, headers=headers_admin)
+        response = client.patch(f'/readers/{reader_2.id}/', json=data, headers=headers_admin)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
 
         reader = reader_service.get_one(reader_2.id)
@@ -74,7 +74,7 @@ class TestReadersViews:
         assert reader.last_name == data.get('last_name'), 'Неверно обновлено фамилия читателя'
 
     def test_get_all_readers_by_admin(self, client, reader_1, reader_2, headers_admin):
-        response = client.get('/readers/all', headers=headers_admin)
+        response = client.get('/readers/all/', headers=headers_admin)
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         readers: dict = response.json

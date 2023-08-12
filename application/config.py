@@ -6,7 +6,7 @@ dotenv.load_dotenv()
 
 
 class Config(object):
-    SECRET_HERE = '249y823r9v8238r9u'
+    SECRET_HERE = os.getenv('SECRET_KEY')
     POSTGRES_USER = os.getenv('POSTGRES_USER')
     POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
     POSTGRES_DB = os.getenv('POSTGRES_DB')

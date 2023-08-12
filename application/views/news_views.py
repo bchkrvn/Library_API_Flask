@@ -5,12 +5,12 @@ from marshmallow import ValidationError
 from api.models import news
 from api.parsers import news_parser
 from container import news_service, comment_service
-from dao.models.models_dao import NewsSchema
 from helpers.decorators import auth_required, user_required
 from helpers.schemas.comments_schema import CommentsSchema
 from helpers.schemas.news_schema import NewsValidateSchema
 
 news_ns = Namespace('news', 'Страница для получения новостей')
+
 
 @news_ns.route('/')
 class NewsViews(Resource):
@@ -21,11 +21,7 @@ class NewsViews(Resource):
     def get(self):
         """ Страница для получения всех новостей """
         news_ = news_service.get_all()
-        news_list = NewsSchema(many=True).dump(news_)
-        for news_ in news_list:
-            news_['comments'] = comment_service.get_by_news_id(news_['id'])
-
-        return news_list
+        return news_
 
     @news_ns.expect(news_parser)
     @news_ns.response(201, 'Created')
@@ -48,7 +44,7 @@ class NewsViews(Resource):
         return '', 201
 
 
-@news_ns.route('/<int:n_id>')
+@news_ns.route('/<int:n_id>/')
 class OneNewsViews(Resource):
     @news_ns.response(200, 'OK')
     @news_ns.response(401, 'Unauthorized')
@@ -58,11 +54,8 @@ class OneNewsViews(Resource):
     def get(self, n_id):
         """ Страница для получения новости с комментариями """
         news_ = news_service.get_one(n_id)
-        news_dict = NewsSchema().dump(news_)
-        comments = comment_service.get_by_news_id(n_id)
-        news_dict['comments'] = comments
 
-        return news_dict, 200
+        return news_, 200
 
     @news_ns.expect(news_parser)
     @news_ns.response(201, 'Created')

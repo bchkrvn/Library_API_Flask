@@ -39,7 +39,7 @@ class AuthorsViews(Resource):
         return '', 201
 
 
-@author_ns.route('/<int:id_>')
+@author_ns.route('/<int:id_>/')
 class AuthorViews(Resource):
     @author_ns.response(401, 'Unauthorized')
     @author_ns.response(404, 'NotFound')

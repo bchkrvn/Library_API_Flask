@@ -53,7 +53,7 @@ class UsersViews(Resource):
         return '', 204
 
 
-@user_ns.route('/<int:u_id>')
+@user_ns.route('/<int:u_id>/')
 class UserViews(Resource):
     @user_ns.response(404, 'NotFound')
     @user_ns.marshal_with(user, as_list=False, code=200, description='OK')
@@ -99,7 +99,7 @@ class UserViews(Resource):
         return '', 204
 
 
-@user_ns.route('/all')
+@user_ns.route('/all/')
 class UserAllViews(Resource):
     @user_ns.response(401, 'Unauthorized')
     @user_ns.response(403, 'Forbidden')
@@ -112,7 +112,7 @@ class UserAllViews(Resource):
         return user_service.get_all()
 
 
-@user_ns.route('/register')
+@user_ns.route('/register/')
 class UserRegisterView(Resource):
     @user_ns.response(201, 'Created')
     @user_ns.response(400, 'BadRequest')
@@ -132,7 +132,7 @@ class UserRegisterView(Resource):
         return '', 201
 
 
-@user_ns.route('/password')
+@user_ns.route('/password/')
 class UserPasswordView(Resource):
 
     @user_ns.response(204, 'NoContent')

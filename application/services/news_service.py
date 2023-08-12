@@ -71,8 +71,9 @@ class NewsService:
         if news.user_id != user.id and user.role != 'admin':
             abort(403)
 
-        self.news_dao.delete(news)
         self.comment_dao.delete_by_news_id(n_id)
+        self.news_dao.delete(news)
+
 
     def add_comments_to_amount(self, news: News):
         """

@@ -55,7 +55,7 @@ class ReadersViews(Resource):
         return '', 204
 
 
-@reader_ns.route('/<int:u_id>')
+@reader_ns.route('/<int:u_id>/')
 class ReaderViews(Resource):
 
     @reader_ns.response(401, 'Unauthorized')
@@ -104,7 +104,7 @@ class ReaderViews(Resource):
         return '', 204
 
 
-@reader_ns.route('/all')
+@reader_ns.route('/all/')
 class ReadersViews(Resource):
     @reader_ns.marshal_with(reader, as_list=True, code=200, description='OK')
     @reader_ns.response(400, 'BadRequest')

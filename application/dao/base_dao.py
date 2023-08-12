@@ -25,14 +25,14 @@ class BaseDAO:
         """
         return self._session.query(self.__model__).get(id_)
 
-    def save(self, object_: object):
+    def save(self, object_: object) -> None:
         """
         Сохранить объект в БД
         """
         self._session.add(object_)
         self._session.commit()
 
-    def delete(self, object_: object):
+    def delete(self, object_: object) -> None:
         """
         Удалить объект из БД
         """

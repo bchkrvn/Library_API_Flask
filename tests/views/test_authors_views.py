@@ -27,7 +27,7 @@ class TestAuthorViews:
         assert author.last_name == data.get('last_name'), 'Неверно установлено фамилия автора'
 
     def test_get_author(self, client, headers_user, author_1):
-        response = client.get(f'/authors/{author_1.id}', headers=headers_user)
+        response = client.get(f'/authors/{author_1.id}/', headers=headers_user)
         author = response.json
         author_keys = ['id', 'first_name', 'middle_name', 'last_name', ]
 
@@ -42,7 +42,7 @@ class TestAuthorViews:
             "middle_name": "Отчество_новое",
             "last_name": "Фамилия_новая"
         }
-        response = client.put(f'/authors/1', json=data, headers=headers_admin)
+        response = client.put(f'/authors/{author_1.id}/', json=data, headers=headers_admin)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
 
         author = author_service.get_one(author_1.id)
@@ -57,7 +57,7 @@ class TestAuthorViews:
             "middle_name": "Отчество_новое",
             "last_name": "Фамилия_новая"
         }
-        response = client.patch(f'/authors/1', json=data, headers=headers_admin)
+        response = client.patch(f'/authors/{author_1.id}/', json=data, headers=headers_admin)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
 
         author = author_service.get_one(author_1.id)
@@ -67,7 +67,7 @@ class TestAuthorViews:
         assert author.last_name == data.get('last_name'), 'Неверно обновлено фамилия автора'
 
     def test_delete(self, client, author_1, author_2, headers_admin, author_service):
-        response = client.delete(f'/authors/{author_2.id}', headers=headers_admin)
+        response = client.delete(f'/authors/{author_2.id}/', headers=headers_admin)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
 
         authors = author_service.get_all()

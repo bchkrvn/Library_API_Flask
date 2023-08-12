@@ -27,7 +27,7 @@ class TestNewsViews:
         assert news.amount_comments == 0, "Не установлено количество комментариев"
 
     def test_get_one_news(self, client, news_1, comment_1, headers_user):
-        response = client.get(f'/news/{news_1.id}', headers=headers_user)
+        response = client.get(f'/news/{news_1.id}/', headers=headers_user)
         assert response.status_code == 200, f'Вернулся статус {response.status_code} вместо 200'
 
         news = response.json
@@ -41,7 +41,7 @@ class TestNewsViews:
         data = {
             "text": "new_text"
         }
-        response = client.post(f'/news/{news_1.id}', json=data, headers=headers_user)
+        response = client.post(f'/news/{news_1.id}/', json=data, headers=headers_user)
         assert response.status_code == 201, f'Вернулся статус {response.status_code} вместо 201'
 
         comment = comment_service.get_all()[-1]
@@ -56,7 +56,7 @@ class TestNewsViews:
         data = {
             "text": "new_text"
         }
-        response = client.put(f'/news/{news_1.id}', json=data, headers=headers_user)
+        response = client.put(f'/news/{news_1.id}/', json=data, headers=headers_user)
         assert response.status_code == 204, f'Вернулся статус {response.status_code} вместо 204'
 
         news = news_service.get_one(news_1.id)
@@ -73,7 +73,7 @@ class TestNewsViews:
         data = {
             "text": "new_text"
         }
-        response = client.put(f'/news/{news_1.id}', json=data, headers=headers_admin)
+        response = client.put(f'/news/{news_1.id}/', json=data, headers=headers_admin)
         assert response.status_code == 204, f'Вернулся статус {response.status_code} вместо 204'
 
         news = news_service.get_one(news_1.id)
@@ -87,7 +87,7 @@ class TestNewsViews:
         assert news.amount_comments == 0, "Не установлено количество комментариев"
 
     def test_delete_news_by_user(self, client, news_1, comment_1, headers_user, news_service, comment_service):
-        response = client.delete(f'/news/{news_1.id}', headers=headers_user)
+        response = client.delete(f'/news/{news_1.id}/', headers=headers_user)
         assert response.status_code == 204, f'Вернулся статус {response.status_code} вместо 204'
 
         news = news_service.get_all()
@@ -97,7 +97,7 @@ class TestNewsViews:
         assert len(comment) == 0, 'Комментарий не удалился'
 
     def test_delete_news_by_admin(self, client, news_1, comment_1, headers_admin, news_service, comment_service):
-        response = client.delete(f'/news/{news_1.id}', headers=headers_admin)
+        response = client.delete(f'/news/{news_1.id}/', headers=headers_admin)
         assert response.status_code == 204, f'Вернулся статус {response.status_code} вместо 204'
 
         news = news_service.get_all()

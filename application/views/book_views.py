@@ -46,7 +46,7 @@ class BooksViews(Resource):
         return '', 201
 
 
-@book_ns.route('/<int:id_>')
+@book_ns.route('/<int:id_>/')
 class BookViews(Resource):
 
     @book_ns.response(401, 'Unauthorized')

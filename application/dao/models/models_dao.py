@@ -1,7 +1,6 @@
 from sqlalchemy.orm import relationship
 
 from setup_db import db
-from marshmallow import Schema, fields
 
 
 class Book(db.Model):
@@ -9,10 +8,10 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
     is_in_lib = db.Column(db.Boolean, nullable=False)
-    author_id = db.Column(db.Integer, db.ForeignKey('author.id'), nullable=False)
-    author = relationship('Author')
+    author_id = db.Column(db.Integer, db.ForeignKey('author.id'), nullable=True)
+    author = relationship('Author', backref='books')
     reader_id = db.Column(db.Integer, db.ForeignKey('reader.id'))
-    reader = relationship('Reader')
+    reader = relationship('Reader', backref='books')
 
 
 class Author(db.Model):
@@ -28,8 +27,8 @@ class Reader(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = relationship('User')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    user = relationship('User', backref='reader')
 
 
 class User(db.Model):
@@ -49,38 +48,15 @@ class News(db.Model):
     amount_comments = db.Column(db.Integer, default=0)
     date = db.Column(db.DateTime, nullable=False)
     update_date = db.Column(db.DateTime)
-
-
-class UserSchema(Schema):
-    id = fields.Int()
-    username = fields.Str()
-
-
-class NewsSchema(Schema):
-    id = fields.Int(dump_only=True)
-    user = fields.Nested(UserSchema)
-    text = fields.Str()
-    date = fields.DateTime()
-    amount_comments = fields.Integer()
-    update_date = fields.DateTime()
+    comments = relationship('Comment', backref='news')
 
 
 class Comment(db.Model):
     __tablename__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
-    news_id = db.Column(db.Integer, db.ForeignKey('news.id'), nullable=False)
-    news = relationship('News')
+    news_id = db.Column(db.Integer, db.ForeignKey('news.id'), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = relationship('User')
     text = db.Column(db.String, nullable=False)
     date = db.Column(db.DateTime, nullable=False)
     update_date = db.Column(db.DateTime)
-
-
-class CommentSchema(Schema):
-    id = fields.Int(dump_only=True)
-    news_id = fields.Int()
-    user = fields.Nested(UserSchema)
-    text = fields.Str()
-    date = fields.DateTime()
-    update_date = fields.DateTime()

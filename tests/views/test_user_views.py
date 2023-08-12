@@ -35,7 +35,7 @@ class TestUserViews:
         assert len(readers) == 0, 'Читатель не удалился вместе с пользователем'
 
     def test_get_by_admin(self, client, admin, headers_admin, user_2):
-        response = client.get(f'/users/{user_2.id}', headers=headers_admin)
+        response = client.get(f'/users/{user_2.id}/', headers=headers_admin)
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 204'
 
         user = response.json
@@ -50,14 +50,14 @@ class TestUserViews:
         data = {
             "username": "new_username"
         }
-        response = client.put(f'/users/{user_2.id}', json=data, headers=headers_admin)
+        response = client.put(f'/users/{user_2.id}/', json=data, headers=headers_admin)
 
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
         assert user_2.username == data.get('username'), 'Имя пользователя не обновилось'
 
     def test_delete_by_admin(self, client, admin, headers_admin, user_2, reader_1, reader_2, user_service,
                              reader_service):
-        response = client.delete(f'/users/{user_2.id}', headers=headers_admin)
+        response = client.delete(f'/users/{user_2.id}/', headers=headers_admin)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
 
         users = user_service.get_all()
@@ -67,7 +67,7 @@ class TestUserViews:
         assert len(readers) == 1, 'Читатель не удалился вместе с пользователем'
 
     def test_get_all_by_admin(self, client, admin, headers_admin, user_2):
-        response = client.get('/users/all', headers=headers_admin)
+        response = client.get('/users/all/', headers=headers_admin)
         assert response.status_code == 200, f'Возвращается код {response.status_code} вместо 200'
 
         users = response.json
@@ -83,7 +83,7 @@ class TestUserViews:
             "username": "new_username",
             "password": hard_password_1
         }
-        response = client.post(f'/users/register', json=data)
+        response = client.post(f'/users/register/', json=data)
         assert response.status_code == 201, f'Возвращается код {response.status_code} вместо 201'
 
         user = user_service.get_all()[-1]
@@ -105,7 +105,7 @@ class TestUserViews:
             'old_password': hard_password_1,
             'new_password': hard_password_1 + hard_password_1
         }
-        response = client.post(f'/users/password', json=data, headers=headers_user)
+        response = client.post(f'/users/password/', json=data, headers=headers_user)
         assert response.status_code == 204, f'Возвращается код {response.status_code} вместо 204'
         assert old_password != user_1.password, 'Пароль не обновился'
         assert compare_password(user_1.password, data.get('new_password')), 'Новый пароль не установился'

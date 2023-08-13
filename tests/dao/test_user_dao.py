@@ -1,4 +1,4 @@
-from dao.models.models_dao import User
+from models import User
 from tools.security import get_hash
 
 

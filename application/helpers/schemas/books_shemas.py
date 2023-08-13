@@ -1,6 +1,6 @@
 from marshmallow import Schema, fields, validates_schema, ValidationError
 
-from .tools import not_empty_string
+from .validators import not_empty_string
 
 
 class BookSchema(Schema):

@@ -1,7 +1,7 @@
 import pytest
 from werkzeug.exceptions import NotFound, BadRequest
 
-from dao.models.models_dao import User, Reader
+from models import User, Reader
 from tools.security import compare_password
 
 

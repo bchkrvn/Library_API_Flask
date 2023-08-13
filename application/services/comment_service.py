@@ -1,8 +1,8 @@
 import datetime
 from flask import abort
 
-from dao.comment_dao import CommentDAO
-from dao.models.models_dao import Comment
+from dao import CommentDAO
+from models import Comment
 from services.news_service import NewsService
 from services.users_service import UserService
 

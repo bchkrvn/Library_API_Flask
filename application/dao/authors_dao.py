@@ -1,5 +1,5 @@
-from dao.base_dao import BaseDAO
-from dao.models.models_dao import Author
+from dao import BaseDAO
+from models import Author
 
 
 class AuthorDAO(BaseDAO):

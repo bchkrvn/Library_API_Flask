@@ -1,11 +1,11 @@
 from flask_restx import Namespace, Resource
-from flask import request, abort
+from flask import request
 from marshmallow import ValidationError
 
 from api.parsers import comments_parser
 from container import comment_service
 from helpers.decorators import user_required
-from helpers.schemas.comments_schema import CommentsSchema
+from helpers.schemas import CommentsSchema
 
 comment_ns = Namespace('comments', 'Страница для работы с комментариями')
 
@@ -24,8 +24,8 @@ class CommentView(Resource):
 
         try:
             CommentsSchema().load(data)
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         data['id'] = c_id
         data['user_id'] = u_id

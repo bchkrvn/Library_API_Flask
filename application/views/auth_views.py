@@ -1,10 +1,10 @@
 from flask_restx import Resource, Namespace
-from flask import request, abort
+from flask import request
 from marshmallow import ValidationError
 
 from api.parsers import auth_post, auth_put
 from container import auth_service
-from helpers.schemas.auth_schemas import AuthPostSchema, AuthPutSchema
+from helpers.schemas import AuthPostSchema, AuthPutSchema
 
 auth_ns = Namespace('auth', "Страница для авторизации пользователя")
 
@@ -20,8 +20,8 @@ class AuthsViews(Resource):
 
         try:
             AuthPostSchema().load(data)
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         username = data.get('username')
         password = data.get('password')
@@ -38,8 +38,8 @@ class AuthsViews(Resource):
 
         try:
             AuthPutSchema().load(data)
-        except ValidationError:
-            abort(400, 'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         refresh_token = data.get('refresh_token')
         tokens = auth_service.approve_refresh_token(refresh_token)

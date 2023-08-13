@@ -1,12 +1,14 @@
-from dao.models.models_dao import Reader, User
-from dao.readers_dao import ReaderDAO
 from flask import abort
+
+from models import Reader, User
+from dao import ReaderDAO
 
 
 class ReaderService:
     """
     Сервис для работы с читателем
     """
+
     def __init__(self, dao: ReaderDAO):
         self.dao = dao
 
@@ -72,4 +74,3 @@ class ReaderService:
         """
         reader = self.get_one(id_)
         self.dao.delete(reader)
-

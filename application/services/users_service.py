@@ -1,11 +1,11 @@
 from sqlalchemy.exc import IntegrityError
-
 from flask import abort
-from dao.models.models_dao import User
-from dao.users_dao import UserDAO
+
+from models import User
+from dao import UserDAO
 from services.books_service import BookService
 from services.readers_service import ReaderService
-from tools.security import get_hash, compare_password
+from tools import get_hash, compare_password
 
 
 class UserService:
@@ -44,7 +44,7 @@ class UserService:
         """
         user = self.dao.get_by_name(username)
         if not user:
-            abort(404, f'User "{username}" not found')
+            abort(404, f"User '{username}' not found")
         return user
 
     def create(self, data: dict):

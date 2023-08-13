@@ -2,9 +2,8 @@ import datetime
 
 from flask import abort
 
-from dao.comment_dao import CommentDAO
-from dao.models.models_dao import News
-from dao.news_dao import NewsDAO
+from dao import CommentDAO, NewsDAO
+from models import News
 from services.users_service import UserService
 
 
@@ -12,6 +11,7 @@ class NewsService:
     """
     Сервис для работы с новостями
     """
+
     def __init__(self, news_dao: NewsDAO, user_service: UserService, comment_dao: CommentDAO):
         self.news_dao = news_dao
         self.user_service = user_service
@@ -73,7 +73,6 @@ class NewsService:
 
         self.comment_dao.delete_by_news_id(n_id)
         self.news_dao.delete(news)
-
 
     def add_comments_to_amount(self, news: News):
         """

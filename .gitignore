@@ -8,3 +8,4 @@ test.db
 pg_data/
 docker/docker.env
 .pytest_cache/
+load_data

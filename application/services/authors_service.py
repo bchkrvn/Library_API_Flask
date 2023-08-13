@@ -1,12 +1,13 @@
 from flask import abort
-from dao.authors_dao import AuthorDAO
-from dao.models.models_dao import Author
+from dao import AuthorDAO
+from models import Author
 
 
 class AuthorService:
     """
     Сервис для работы с авторами
     """
+
     def __init__(self, dao: AuthorDAO):
         self.dao = dao
 
@@ -35,9 +36,10 @@ class AuthorService:
         :param last_name: фамилия
         :return: автор
         """
+        print(first_name, last_name)
         author = self.dao.get_by_name(first_name, last_name)
         if not author:
-            abort(404, f'author "{first_name} {last_name}" not found')
+            abort(404, f"author '{first_name} {last_name}' not found")
         return author
 
     def create(self, data: dict) -> None:

@@ -1,12 +1,12 @@
 from flask_restx import Resource, Namespace
-from flask import request, abort
+from flask import request
 from marshmallow import ValidationError
 
-from api.models import user
+from api import user
 from api.parsers import user_post_register, user_post_password, user_put
 from container import user_service
 from helpers.decorators import admin_required, user_required
-from helpers.schemas.user_schemas import UserSchema, UserPasswordSchema
+from helpers.schemas import UserSchema, UserPasswordSchema
 
 user_ns = Namespace('users', 'Страница для работы с пользователями')
 
@@ -35,8 +35,8 @@ class UsersViews(Resource):
 
         try:
             UserSchema().load(user_data, partial=("password",))
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         user_data['id'] = u_id
         user_service.update(user_data)
@@ -79,8 +79,8 @@ class UserViews(Resource):
 
         try:
             UserSchema().load(user_data, partial=("password",))
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         user_data['id'] = u_id
         user_service.update(user_data)
@@ -125,8 +125,8 @@ class UserRegisterView(Resource):
 
         try:
             UserSchema().load(data)
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         user_service.create(data)
         return '', 201
@@ -149,8 +149,8 @@ class UserPasswordView(Resource):
 
         try:
             UserPasswordSchema().load(passwords)
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         passwords['user_id'] = u_id
         user_service.change_password(passwords)

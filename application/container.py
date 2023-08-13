@@ -1,16 +1,5 @@
-from dao.authors_dao import AuthorDAO
-from dao.books_dao import BookDAO
-from dao.comment_dao import CommentDAO
-from dao.news_dao import NewsDAO
-from dao.readers_dao import ReaderDAO
-from dao.users_dao import UserDAO
-from services.authors_service import AuthorService
-from services.auths_service import AuthService
-from services.books_service import BookService
-from services.comment_service import CommentService
-from services.news_service import NewsService
-from services.readers_service import ReaderService
-from services.users_service import UserService
+from dao import AuthorDAO, BookDAO, CommentDAO, NewsDAO, ReaderDAO, UserDAO
+from services import AuthorService, AuthService, BookService, CommentService, NewsService, ReaderService, UserService
 from setup_db import db
 
 reader_dao = ReaderDAO(db.session)

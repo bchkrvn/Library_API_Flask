@@ -1,13 +1,12 @@
 from flask_restx import Namespace, Resource
-from flask import request, abort
+from flask import request
 from marshmallow import ValidationError
 
-from api.models import news
+from api import news
 from api.parsers import news_parser
 from container import news_service, comment_service
 from helpers.decorators import auth_required, user_required
-from helpers.schemas.comments_schema import CommentsSchema
-from helpers.schemas.news_schema import NewsValidateSchema
+from helpers.schemas import CommentsSchema, NewsValidateSchema
 
 news_ns = Namespace('news', 'Страница для получения новостей')
 
@@ -36,8 +35,8 @@ class NewsViews(Resource):
 
         try:
             NewsValidateSchema().load(data)
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         data['user_id'] = u_id
         news_service.create(data)
@@ -69,8 +68,8 @@ class OneNewsViews(Resource):
 
         try:
             CommentsSchema().load(data)
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         data['news_id'] = n_id
         data['user_id'] = u_id
@@ -90,8 +89,8 @@ class OneNewsViews(Resource):
         data = request.json
         try:
             NewsValidateSchema().load(data)
-        except ValidationError:
-            abort(400, f'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         data['n_id'] = n_id
         data['u_id'] = u_id

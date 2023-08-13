@@ -1,8 +1,8 @@
 import os
 from typing import Type
-import dotenv
+from dotenv import load_dotenv
 
-dotenv.load_dotenv()
+load_dotenv()
 
 
 class Config(object):

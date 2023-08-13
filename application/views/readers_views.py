@@ -1,12 +1,12 @@
 from flask_restx import Namespace, Resource
-from flask import request, abort
+from flask import request
 from marshmallow import ValidationError
 
-from api.models import reader
+from api import reader
 from api.parsers import reader_put, reader_patch
 from container import reader_service
 from helpers.decorators import admin_required, user_required
-from helpers.schemas.readers_schemas import ReaderSchema
+from helpers.schemas import ReaderSchema
 
 reader_ns = Namespace('readers', "Страница для работы с читателями")
 
@@ -30,8 +30,8 @@ class ReadersViews(Resource):
 
         try:
             ReaderSchema().load(data)
-        except ValidationError:
-            abort(400, 'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         data['id'] = u_id
         reader_service.update(data)
@@ -47,8 +47,8 @@ class ReadersViews(Resource):
 
         try:
             ReaderSchema(partial=True).load(data)
-        except ValidationError:
-            abort(400, 'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         data['id'] = u_id
         reader_service.update_partial(data)
@@ -78,8 +78,8 @@ class ReaderViews(Resource):
         data = request.json
         try:
             ReaderSchema().load(data)
-        except ValidationError:
-            abort(400, 'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         data['id'] = u_id
         reader_service.update(data)
@@ -96,8 +96,8 @@ class ReaderViews(Resource):
         data = request.json
         try:
             ReaderSchema(partial=True).load(data)
-        except ValidationError:
-            abort(400, 'Wrong data')
+        except ValidationError as e:
+            return e.messages, 400
 
         data['id'] = u_id
         reader_service.update_partial(data)
@@ -113,5 +113,4 @@ class ReadersViews(Resource):
     @admin_required
     def get(self):
         """Страница для получения информации о всех читателях, доступно администратору"""
-
         return reader_service.get_all()

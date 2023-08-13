@@ -1,12 +1,12 @@
 from flask_restx import Resource, Namespace
-from flask import request, abort
+from flask import request
 from marshmallow import ValidationError
 
-from api.models import book
+from api import book
 from api.parsers import books_get, books_post, books_put, books_patch, books_give
 from container import books_service
 from helpers.decorators import admin_required, auth_required
-from helpers.schemas.books_shemas import BookSchema, BookPatchSchema, BookTransferSchema
+from helpers.schemas import BookSchema, BookPatchSchema, BookTransferSchema
 
 book_ns = Namespace('books', "Страница для работы с книгами")
 
@@ -40,7 +40,7 @@ class BooksViews(Resource):
         try:
             BookSchema().load(data)
         except ValidationError as e:
-            abort(400, f'{e.messages}')
+            return e.messages, 400
 
         books_service.create(data)
         return '', 201
@@ -75,7 +75,7 @@ class BookViews(Resource):
         try:
             BookSchema().load(data)
         except ValidationError as e:
-            abort(400, f'{e.messages}')
+            return e.messages, 400
 
         data['id'] = id_
         books_service.update(data)
@@ -97,7 +97,7 @@ class BookViews(Resource):
         try:
             BookPatchSchema(partial=True).load(data)
         except ValidationError as e:
-            abort(400, f'{e.messages}')
+            return e.messages, 400
 
         data['id'] = id_
         books_service.update_partial(data)
@@ -134,7 +134,7 @@ class BookGiveViews(Resource):
         try:
             BookTransferSchema().load(data)
         except ValidationError as e:
-            abort(400, f'Wrong data')
+            return e.messages, 400
 
         books_service.give_book_to_reader(data)
         return '', 204
@@ -158,7 +158,7 @@ class BookGetViews(Resource):
         try:
             BookTransferSchema().load(data, partial=("reader_id",))
         except ValidationError as e:
-            abort(400, f'Wrong data')
+            return e.messages, 400
 
         books_service.get_book_from_reader(data)
         return '', 204
